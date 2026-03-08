@@ -1,0 +1,28 @@
+{
+  "note_folders": ["piano", "bells", "pad"],
+  "note_files": {
+    "piano": [
+      "Piano.ff.C2.wav", "Piano.ff.Db2.wav", "Piano.ff.D2.wav", "Piano.ff.Eb2.wav", "Piano.ff.E2.wav", "Piano.ff.F2.wav", "Piano.ff.Gb2.wav", "Piano.ff.G2.wav", "Piano.ff.Ab2.wav", "Piano.ff.A2.wav", "Piano.ff.Bb2.wav", "Piano.ff.B2.wav",
+      "Piano.ff.C3.wav", "Piano.ff.Db3.wav", "Piano.ff.D3.wav", "Piano.ff.Eb3.wav", "Piano.ff.E3.wav", "Piano.ff.F3.wav", "Piano.ff.Gb3.wav", "Piano.ff.G3.wav", "Piano.ff.Ab3.wav", "Piano.ff.A3.wav", "Piano.ff.Bb3.wav", "Piano.ff.B3.wav",
+      "Piano.ff.C4.wav", "Piano.ff.Db4.wav", "Piano.ff.D4.wav", "Piano.ff.Eb4.wav", "Piano.ff.E4.wav", "Piano.ff.F4.wav", "Piano.ff.Gb4.wav", "Piano.ff.G4.wav", "Piano.ff.Ab4.wav", "Piano.ff.A4.wav", "Piano.ff.Bb4.wav", "Piano.ff.B4.wav",
+      "Piano.ff.C5.wav", "Piano.ff.Db5.wav", "Piano.ff.D5.wav", "Piano.ff.Eb5.wav", "Piano.ff.E5.wav", "Piano.ff.F5.wav", "Piano.ff.Gb5.wav", "Piano.ff.G5.wav", "Piano.ff.Ab5.wav", "Piano.ff.A5.wav", "Piano.ff.Bb5.wav", "Piano.ff.B5.wav",
+      "Piano.ff.C6.wav", "Piano.ff.Db6.wav", "Piano.ff.D6.wav", "Piano.ff.Eb6.wav", "Piano.ff.E6.wav", "Piano.ff.F6.wav", "Piano.ff.Gb6.wav", "Piano.ff.G6.wav", "Piano.ff.Ab6.wav", "Piano.ff.A6.wav", "Piano.ff.Bb6.wav", "Piano.ff.B6.wav",
+      "Piano.ff.C7.wav", "Piano.ff.Db7.wav", "Piano.ff.D7.wav", "Piano.ff.Eb7.wav", "Piano.ff.E7.wav", "Piano.ff.F7.wav", "Piano.ff.Gb7.wav", "Piano.ff.G7.wav", "Piano.ff.Ab7.wav", "Piano.ff.A7.wav", "Piano.ff.Bb7.wav", "Piano.ff.B7.wav"
+    ],
+    "bells": [
+      "Bells.ff.C2.wav", "Bells.ff.Db2.wav", "Bells.ff.D2.wav", "Bells.ff.Eb2.wav", "Bells.ff.E2.wav", "Bells.ff.F2.wav", "Bells.ff.Gb2.wav", "Bells.ff.G2.wav", "Bells.ff.Ab2.wav", "Bells.ff.A2.wav", "Bells.ff.Bb2.wav", "Bells.ff.B2.wav",
+      "Bells.ff.C3.wav", "Bells.ff.Db3.wav", "Bells.ff.D3.wav", "Bells.ff.Eb3.wav", "Bells.ff.E3.wav", "Bells.ff.F3.wav", "Bells.ff.Gb3.wav", "Bells.ff.G3.wav", "Bells.ff.Ab3.wav", "Bells.ff.A3.wav", "Bells.ff.Bb3.wav", "Bells.ff.B3.wav",
+      "Bells.ff.C4.wav", "Bells.ff.Db4.wav", "Bells.ff.D4.wav", "Bells.ff.Eb4.wav", "Bells.ff.E4.wav", "Bells.ff.F4.wav", "Bells.ff.Gb4.wav", "Bells.ff.G4.wav", "Bells.ff.Ab4.wav", "Bells.ff.A4.wav", "Bells.ff.Bb4.wav", "Bells.ff.B4.wav",
+      "Bells.ff.C5.wav", "Bells.ff.Db5.wav", "Bells.ff.D5.wav", "Bells.ff.Eb5.wav", "Bells.ff.E5.wav", "Bells.ff.F5.wav", "Bells.ff.Gb5.wav", "Bells.ff.G5.wav", "Bells.ff.Ab5.wav", "Bells.ff.A5.wav", "Bells.ff.Bb5.wav", "Bells.ff.B5.wav",
+      "Bells.ff.C6.wav", "Bells.ff.Db6.wav", "Bells.ff.D6.wav", "Bells.ff.Eb6.wav", "Bells.ff.E6.wav", "Bells.ff.F6.wav", "Bells.ff.Gb6.wav", "Bells.ff.G6.wav", "Bells.ff.Ab6.wav", "Bells.ff.A6.wav", "Bells.ff.Bb6.wav", "Bells.ff.B6.wav",
+      "Bells.ff.C7.wav", "Bells.ff.Db7.wav", "Bells.ff.D7.wav", "Bells.ff.Eb7.wav", "Bells.ff.E7.wav", "Bells.ff.F7.wav", "Bells.ff.Gb7.wav", "Bells.ff.G7.wav", "Bells.ff.Ab7.wav", "Bells.ff.A7.wav", "Bells.ff.Bb7.wav", "Bells.ff.B7.wav"
+    ]
+  },
+  "background_files": [
+    "birds.wav",
+    "ocean.wav",
+    "rain.wav",
+    "seagulls.wav",
+    "vinyl.wav"
+  ]
+}

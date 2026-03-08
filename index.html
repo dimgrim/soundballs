@@ -349,18 +349,16 @@
             
             try {
                 // Try PHP endpoint first, then Python endpoint
-                let response = await fetch('/list-sounds.php');
-                if (!response.ok) {
-                    response = await fetch('/list-sounds');
-                }
-                
+                //let response = await fetch('/list-sounds.php');                
+                //if (!response.ok) {
+                    response = await fetch('/sounds.json');
+                //}
                 const data = await response.json();
                 
                 // Populate note folders
                 noteFolders = data.note_folders;
             
                 folderSelect.innerHTML = '';
-                
                 if (noteFolders.length === 0) {
                     // Fallback to default if no folders found
                     folderSelect.innerHTML = '<option value="piano">piano</option>';
@@ -421,6 +419,7 @@
 
         // Load note files for a specific folder
         async function loadNoteFiles(folder) {
+
             statusEl.textContent = `Loading notes from ${folder}...`;
             
             if (noteFiles[folder] && Object.keys(noteFiles[folder]).length > 0) {
@@ -434,7 +433,7 @@
             window.noteFiles = {};
             
             for (let note of CHROMATIC) {
-                for (let octave of [2,3,4,5,6]) {
+                for (let octave of [2,3,4,5,6,7]) {
                     const noteName = `${note}${octave}`;
                     const possiblePaths = [
                         `${SOUNDS_DIR}/${folder}/${noteName}.wav`,
@@ -584,7 +583,6 @@
             return notes;
         }
 
-        // Choose note for hit (matching Python logic exactly)
         function chooseNoteForHit(scaleNotes, octave, harmonic, collision = false) {
             const chosen = [];
             
@@ -599,13 +597,12 @@
                         const name = scaleNotes[degrees[i]];
                         const octv = String(octave+offsets[i]); 
                         chosen.push(findNoteFile(name + octv));
-                        chosen.forEach(element => { console.log(element); });
+                        //chosen.forEach(element => { console.log(element); });
                     }
                 } 
                 else {
                     scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
                     const name = scaleHarmonics[Math.floor(Math.random() * scaleHarmonics.length)];
-                    // const name = scaleNotes[0];
                     const octv = String(octave);
                     chosen.push(findNoteFile(name + octv));
                 }
@@ -620,7 +617,6 @@
                 } else {
                     scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
                     const name = scaleHarmonics[Math.floor(Math.random() * scaleHarmonics.length)];
-                    // const name = scaleNotes[0];
                     const octv = String(octave);
                     chosen.push(findNoteFile(name + octv));
                 }
@@ -648,14 +644,15 @@
             }
         }
 
-        // Update background colour
         function updateBackgroundColour() {
             const sel = bgSelect.value;
             const index = Array.from(bgSelect.options).findIndex(opt => opt.value === sel);
             canvas.style.backgroundColor = BACKGROUND_COLOURS[index % BACKGROUND_COLOURS.length] || BACKGROUND_COLOURS[0];
+             if (sel && sel !== '(none)') {
+                playBackgroundLoop(`${SOUNDS_DIR}/background/${sel}`);
+            }
         }
 
-        // Handle folder change
         folderSelect.addEventListener('change', async function() {
             currentNoteFolder = this.value;
             await loadNoteFiles(currentNoteFolder);
@@ -929,13 +926,11 @@
         
         stopBtn.addEventListener('click', stop);
         
-        // Initialize
         updateScale();
         
-        // Load sounds directory
         loadSoundsDirectory();
         
-        console.log('Sound Balls Web App initialized with Worker timing');
+        console.log('Sound Balls Web App initialized');
     </script>
 </body>
 </html>
