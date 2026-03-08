@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sound Balls</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: white;
+        }
+        #container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        canvas {
+            display: block;
+            width: 1200px;
+            height: 600px;
+            border: 2px solid #666;
+            background-color: black;
+        }
+        .controls {
+            background-color: #444;
+            padding: 10px;
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            border-radius: 5px;
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background-color: #555;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        select, button {
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #666;
+            background-color: #666;
+            color: white;
+            cursor: pointer;
+        }
+        select:hover, button:hover {
+            background-color: #777;
+        }
+        input[type=range] {
+            width: 80px;
+        }
+        label {
+            font-size: 12px;
+        }
+        .slider-label {
+            font-size: 11px;
+            color: #ccc;
+        }
+        button {
+            background-color: #2c3e50;
+            border: none;
+            padding: 8px 15px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #34495e;
+        }
+        #status {
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="canvas" width="1200" height="600"></canvas>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label>Key:</label>
+                <select id="key-select">
+                    <option value="C" selected>C</option>
+                    <option value="Db">Db</option>
+                    <option value="D">D</option>
+                    <option value="Eb">Eb</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                    <option value="Gb">Gb</option>
+                    <option value="G">G</option>
+                    <option value="Ab">Ab</option>
+                    <option value="A">A</option>
+                    <option value="Bb">Bb</option>
+                    <option value="B">B</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Scale:</label>
+                <select id="scale-select">
+                    <option value="Major" selected>Major</option>
+                    <option value="Minor">Minor</option>
+                    <option value="Pentatonic">Pentatonic</option>
+                    <option value="Minor Pentatonic">Minor Pentatonic</option>
+                    <option value="Chromatic">Chromatic</option>
+                    <option value="Dorian">Dorian</option>
+                    <option value="Phrygian">Phrygian</option>
+                    <option value="Lydian">Lydian</option>
+                    <option value="Mixolydian">Mixolydian</option>
+                    <option value="Locrian">Locrian</option>
+                    <option value="Harmonic Minor">Harmonic Minor</option>
+                    <option value="Melodic Minor (Jazz)">Melodic Minor (Jazz)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Balls:</label>
+                <select id="balls-select">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Note Folder:</label>
+                <select id="folder-select">
+                    <option value="">Loading...</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Background:</label>
+                <select id="bg-select">
+                    <option value="(none)" selected>(none)</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <div class="slider-container">
+                    <span class="slider-label-left">notes</span>
+                    <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
+                    <span class="slider-label-right">background</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Ball Size:</label>
+                <input type="range" id="size-slider" min="0.5" max="2.0" step="0.01" value="1.0">
+                <span class="slider-label" id="size-value">1.0x</span>
+            </div>
+
+            <div class="control-group">
+                <label>Melody Speed:</label>
+                <input type="range" id="melody-speed" min="0" max="100" step="1" value="50">
+                <span class="slider-label" id="melody-value">50</span>
+            </div>
+
+            <div class="control-group">
+                <label>Bass Speed:</label>
+                <input type="range" id="bass-speed" min="0" max="100" step="1" value="25">
+                <span class="slider-label" id="bass-value">25</span>
+            </div>
+
+            <div class="control-group">
+                <label>Harmonics Speed:</label>
+                <input type="range" id="harmonics-speed" min="0" max="100" step="1" value="12">
+                <span class="slider-label" id="harmonics-value">12</span>
+            </div>
+
+            <button id="start-btn">Start</button>
+            <button id="stop-btn">Stop</button>
+            <span id="status"></span>
+        </div>
+    </div>
+
+    <script>
+        const SOUNDS_DIR = "./sounds";
+        const DEFAULT_NOTE_FOLDER_NAME = 'piano';
+        const WIDTH = 1200;
+        const HEIGHT = WIDTH/2;
+        const BASE_BALL_RADIUS = 26;
+        let BALL_RADIUS = BASE_BALL_RADIUS;
+        const BALL_COLOURS = ['lightblue', 'palegreen', 'greenyellow', 'lightpink', 'pink', 'powderpink','lightgreen', 'mediumspringgreen', 'mistyrose', 'lightskyblue'];
+        const BACKGROUND_COLOURS = ['black', 'green', 'blue', 'lightslategray', 'skyblue', 'darkslategray'];
+        const OCTAVE_SELECTION = [2,4,5,6,7,7,4,5,7,2];
+        const HARMONIC_BALLS = [false, false, false, true, true, true,false,false,true,false];
+        const BASS_OCTAVE = 2;
+        const CHROMATIC = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+        
+        const SCALES = {
+            "Major": [0,2,4,5,7,9,11],
+            "Minor": [0,2,3,5,7,8,10],
+            "Pentatonic": [0,2,4,7,9],
+            "Minor Pentatonic": [0,3,5,7,10],
+            "Dorian": [0,2,3,5,7,9,10],
+            "Phrygian": [0,1,3,5,7,8,10],
+            "Lydian": [0,2,4,6,7,9,11],
+            "Mixolydian": [0,2,4,5,7,9,10],
+            "Locrian": [0,1,3,5,6,8,10],
+            "Harmonic Minor": [0,2,3,5,7,8,11],
+            "Melodic Minor": [0,2,3,5,7,9,11],
+            "Chromatic": [...Array(12).keys()],
+
+        };
+
+        // Global variables
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        let audioContext = null;
+        let notesVolumeNode = null;
+        let bgVolumeNode = null;
+        let noteFiles = {};
+        let backgroundFiles = {};
+        let noteFolders = [];
+        let balls = [];
+        let running = false;
+        let startTime = null;
+        let lastTime = null;
+        let animationFrame = null;
+        let scaleNotes = [];
+        let bgSource = null;
+        let bgStop = false;
+        let currentNoteFolder = DEFAULT_NOTE_FOLDER_NAME;
+        
+        // Worker for timing
+        let timingWorker = null;
+        
+        // DOM elements
+        const keySelect = document.getElementById('key-select');
+        const scaleSelect = document.getElementById('scale-select');
+        const ballsSelect = document.getElementById('balls-select');
+        const folderSelect = document.getElementById('folder-select');
+        const bgSelect = document.getElementById('bg-select');
+        const sizeSlider = document.getElementById('size-slider');
+        const melodySpeed = document.getElementById('melody-speed');
+        const bassSpeed = document.getElementById('bass-speed');
+        const harmonicsSpeed = document.getElementById('harmonics-speed');
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const statusEl = document.getElementById('status');
+        const volumeSlider = document.getElementById('volume');
+        
+        // Display values
+        document.getElementById('size-value').textContent = sizeSlider.value + 'x';
+        document.getElementById('melody-value').textContent = melodySpeed.value;
+        document.getElementById('bass-value').textContent = bassSpeed.value;
+        document.getElementById('harmonics-value').textContent = harmonicsSpeed.value;
+
+        // Ball class
+        class Ball {
+            constructor(x, y, vx, vy, color, octave, harmonic) {
+                this.x = x;
+                this.y = y;
+                this.vx = vx;
+                this.vy = vy;
+                this.color = color;
+                this.octave = octave;
+                this.harmonic = harmonic;
+                this.prevCollisionTime = 0;
+            }
+            
+            move(dt) {
+                this.x += this.vx * dt;
+                this.y += this.vy * dt;
+            }
+        }
+
+        // Initialize timing worker
+        function initTimingWorker() {
+            if (timingWorker) {
+                timingWorker.terminate();
+            }
+            
+            // Create worker blob
+            const workerBlob = new Blob([`
+                let lastTime = null;
+                let running = false;
+                
+                self.addEventListener('message', function(e) {
+                    if (e.data.command === 'start') {
+                        running = true;
+                        lastTime = performance.now() / 1000;
+                        tick();
+                    } else if (e.data.command === 'stop') {
+                        running = false;
+                    }
+                });
+                
+                function tick() {
+                    if (!running) return;
+                    
+                    const now = performance.now() / 1000;
+                    const dt = lastTime ? Math.min(now - lastTime, 0.1) : 0.016;
+                    lastTime = now;
+                    
+                    // Post timing update to main thread
+                    self.postMessage({
+                        type: 'timing',
+                        dt: dt,
+                        now: now
+                    });
+                    
+                    // Schedule next tick with high precision
+                    setTimeout(tick, 16); // ~60fps
+                }
+            `], { type: 'application/javascript' });
+            
+            timingWorker = new Worker(URL.createObjectURL(workerBlob));
+            
+            timingWorker.addEventListener('message', function(e) {
+                if (e.data.type === 'timing' && running) {
+                    // Process physics with the worker's timing
+                    processFrame(e.data.dt, e.data.now);
+                    processAudio();
+                }
+            });
+        }
+
+        // Initialize audio context on first user interaction
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                bgVolumeNode = audioContext.createGain();
+                bgVolumeNode.connect(audioContext.destination);
+                notesVolumeNode = audioContext.createGain();
+                notesVolumeNode.connect(audioContext.destination);
+            }
+            return audioContext;
+        }
+
+        // Load directory contents from server
+        async function loadSoundsDirectory() {
+            statusEl.textContent = 'Loading sounds...';
+            
+            try {
+                // Try PHP endpoint first, then Python endpoint
+                let response = await fetch('/list-sounds.php');
+                if (!response.ok) {
+                    response = await fetch('/list-sounds');
+                }
+                
+                const data = await response.json();
+                
+                // Populate note folders
+                noteFolders = data.note_folders;
+            
+                folderSelect.innerHTML = '';
+                
+                if (noteFolders.length === 0) {
+                    // Fallback to default if no folders found
+                    folderSelect.innerHTML = '<option value="piano">piano</option>';
+                    noteFolders = ['piano'];
+                } else {
+                    for (let folder of noteFolders) {
+                        const option = document.createElement('option');
+                        option.value = folder;
+                        option.textContent = folder;
+                        if (folder === DEFAULT_NOTE_FOLDER_NAME) {
+                            option.selected = true;
+                        }
+                        folderSelect.appendChild(option);
+                    }
+                }
+                
+                // Populate background files
+                if (data.background_files && data.background_files.length > 0) {
+                    for (let bgFile of data.background_files) {
+                        const option = document.createElement('option');
+                        option.value = bgFile;
+                        option.textContent = bgFile;
+                        bgSelect.appendChild(option);
+                    }
+                }
+                
+                // Store note file mappings
+                if (data.note_files) {
+                    for (let folder in data.note_files) {
+                        // Parse note names from filenames
+                        const files = data.note_files[folder];
+                        noteFiles[folder] = {};
+                        
+                        for (let file of files) {
+                            // Try to extract note name from filename
+                            // Common patterns: Piano.ff.C4.wav, C4.wav, etc.
+                            let noteName = file.replace('.wav', '').split('.').pop();
+                            if (CHROMATIC.some(note => noteName.startsWith(note))) {
+                                noteFiles[folder][noteName] = `${SOUNDS_DIR}/${folder}/${file}`;
+                            }
+                        }
+                    }
+                }
+                
+                statusEl.textContent = `Loaded ${noteFolders.length} folders, ${Object.keys(backgroundFiles).length} backgrounds`;
+                
+            } catch (error) {
+                console.error('Error loading directory:', error);
+                statusEl.textContent = 'Could not load sounds directory';
+                
+                // Fallback to default folder
+                folderSelect.innerHTML = '<option value="piano">piano</option>';
+            }
+            
+            // Load initial note files for selected folder
+            await loadNoteFiles(currentNoteFolder);
+        }
+
+        // Load note files for a specific folder
+        async function loadNoteFiles(folder) {
+            statusEl.textContent = `Loading notes from ${folder}...`;
+            
+            if (noteFiles[folder] && Object.keys(noteFiles[folder]).length > 0) {
+                // Already have mappings from directory listing
+                window.noteFiles = noteFiles[folder];
+                statusEl.textContent = `sounds loaded.`;
+                return;
+            }
+            
+            // Fallback: try to discover files by trying common patterns
+            window.noteFiles = {};
+            
+            for (let note of CHROMATIC) {
+                for (let octave of [2,3,4,5,6]) {
+                    const noteName = `${note}${octave}`;
+                    const possiblePaths = [
+                        `${SOUNDS_DIR}/${folder}/${noteName}.wav`,
+                    ];
+                    
+                    for (let path of possiblePaths) {
+                        try {
+                            const response = await fetch(path, { method: 'HEAD' });
+                            if (response.ok) {
+                                window.noteFiles[noteName] = path;
+                                break;
+                            }
+                        } catch (e) {}
+                    }
+                }
+            }
+            
+            statusEl.textContent = `Loaded ${Object.keys(window.noteFiles).length} notes`;
+        }
+
+        // Play WAV asynchronously
+        async function playWavAsync(path) {
+            if (!path) return;
+            
+            try {
+                if (!audioContext) await initAudio();
+                
+                // Resume audio context if suspended (happens when tab is inactive)
+                if (audioContext.state === 'suspended') {
+                    await audioContext.resume();
+                }
+                
+                const response = await fetch(path);
+                if (!response.ok) return;
+                
+                arrayBuffer = await response.arrayBuffer();
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                
+                // Add slight random volume variation
+                const gainNode = audioContext.createGain();
+                gainNode.gain.value = Math.random() * 0.65 + 0.35;
+                                
+                source.connect(gainNode);
+                gainNode.connect(notesVolumeNode);
+                
+                source.start();
+                
+            } catch (e) {
+                console.error('Audio playback error:', e);
+            }
+        }
+
+        // Play background loop
+        async function playBackgroundLoop(path) {
+            if (!path) return;
+            
+            try {
+                if (!audioContext) await initAudio();
+                
+                const response = await fetch(path);
+                if (!response.ok) return;
+                
+                arrayBuffer = await response.arrayBuffer();
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                
+                bgStop = false;
+                
+                const playLoop = () => {
+                    if (bgStop || !running) return;
+                    
+                    // Resume audio context if suspended
+                    if (audioContext.state === 'suspended') {
+                        audioContext.resume().then(() => {
+                            createAndPlaySource();
+                        });
+                    } 
+                    else {
+                        createAndPlaySource();
+                    }
+                };
+                
+                const createAndPlaySource = () => {
+                    const source = audioContext.createBufferSource();
+                    source.buffer = audioBuffer;
+                    source.connect(bgVolumeNode);
+
+                    source.onended = () => {
+                        if (!bgStop && running) {
+                            playLoop();
+                        }
+                    };
+                    
+                    source.start();
+                    bgSource = source;
+                };
+                
+                playLoop();
+                
+            } catch (e) {
+                console.error('Background playback error:', e);
+            }
+        }
+
+        const setVolume = (value) => {
+            gainNode.gain.setValueAtTime(value, audioContext.currentTime);
+        };
+
+        function findNoteFile(noteName) {
+            // Exact match first
+            if (window.noteFiles && window.noteFiles[noteName]) {
+                return window.noteFiles[noteName];
+            }
+            
+            // Try octave alternatives
+            for (let oct of ['2','3','4','5','6']) {
+                const baseNote = noteName.replace(/[0-9]/g, '');
+                const candidate = baseNote + oct;
+                if (window.noteFiles && window.noteFiles[candidate]) {
+                    return window.noteFiles[candidate];
+                }
+            }
+            
+            // Fallback random file
+            if (window.noteFiles) {
+                const keys = Object.keys(window.noteFiles);
+                if (keys.length > 0) {
+                    return window.noteFiles[keys[Math.floor(Math.random() * keys.length)]];
+                }
+            }
+            
+            return null;
+        }
+
+        // Build scale
+        function buildScale(root, scaleName) {
+            if (!CHROMATIC.includes(root)) return [];
+            const intervals = SCALES[scaleName] || SCALES['Major'];
+            const start = CHROMATIC.indexOf(root);
+            const notes = [];
+            for (let interval of intervals) {
+                const idx = (start + interval) % 12;
+                notes.push(CHROMATIC[idx]);
+            }
+            return notes;
+        }
+
+        // Choose note for hit (matching Python logic exactly)
+        function chooseNoteForHit(scaleNotes, octave, harmonic, collision = false) {
+            const chosen = [];
+            
+            if (collision) {
+                if (!scaleNotes || scaleNotes.length === 0) return [];
+                
+                if (!harmonic && octave === BASS_OCTAVE) {
+                    const rootIdx = Math.floor(Math.random() * scaleNotes.length);
+                    const degrees = [rootIdx, (rootIdx + 2) % scaleNotes.length, (rootIdx + 4) % scaleNotes.length];
+                    const offsets = [0, Math.floor((rootIdx+2)/scaleNotes.length), Math.floor((rootIdx+4)/scaleNotes.length)];
+                    for (let i = 0; i < degrees.length; i++) {
+                        const name = scaleNotes[degrees[i]];
+                        const octv = String(octave+offsets[i]); 
+                        chosen.push(findNoteFile(name + octv));
+                        chosen.forEach(element => { console.log(element); });
+                    }
+                } 
+                else {
+                    scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
+                    const name = scaleHarmonics[Math.floor(Math.random() * scaleHarmonics.length)];
+                    // const name = scaleNotes[0];
+                    const octv = String(octave);
+                    chosen.push(findNoteFile(name + octv));
+                }
+            } 
+            else {
+                if (!scaleNotes || scaleNotes.length === 0) return [];
+                
+                if (!harmonic) {
+                    const name = scaleNotes[Math.floor(Math.random() * scaleNotes.length)];
+                    const octv = String(Math.random() > 0.5 ? octave : octave + 1);
+                    chosen.push(findNoteFile(name + octv));
+                } else {
+                    scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
+                    const name = scaleHarmonics[Math.floor(Math.random() * scaleHarmonics.length)];
+                    // const name = scaleNotes[0];
+                    const octv = String(octave);
+                    chosen.push(findNoteFile(name + octv));
+                }
+                
+            }
+
+            return chosen.filter(c => c);
+        }
+
+        // Update scale
+        function updateScale() {
+            scaleNotes = buildScale(keySelect.value, scaleSelect.value);
+        }
+
+        // Update ball size
+        function updateBallSize() {
+            const factor = parseFloat(sizeSlider.value);
+            BALL_RADIUS = Math.max(1, Math.floor(BASE_BALL_RADIUS * factor));
+            
+            if (balls.length > 0) {
+                for (let ball of balls) {
+                    ball.x = Math.max(BALL_RADIUS, Math.min(WIDTH - BALL_RADIUS, ball.x));
+                    ball.y = Math.max(BALL_RADIUS, Math.min(HEIGHT - BALL_RADIUS, ball.y));
+                }
+            }
+        }
+
+        // Update background colour
+        function updateBackgroundColour() {
+            const sel = bgSelect.value;
+            const index = Array.from(bgSelect.options).findIndex(opt => opt.value === sel);
+            canvas.style.backgroundColor = BACKGROUND_COLOURS[index % BACKGROUND_COLOURS.length] || BACKGROUND_COLOURS[0];
+        }
+
+        // Handle folder change
+        folderSelect.addEventListener('change', async function() {
+            currentNoteFolder = this.value;
+            await loadNoteFiles(currentNoteFolder);
+        });
+
+
+        function processAudio() {
+            if (!running) return;
+    
+            if (audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            if (notesVolumeNode) {
+                const notesvolumeValue = parseFloat(1-volumeSlider.value);
+                notesVolumeNode.gain.setValueAtTime(notesvolumeValue, audioContext.currentTime);
+            }
+            if (bgVolumeNode) {
+                const volumeValue = parseFloat(volumeSlider.value);
+                bgVolumeNode.gain.setValueAtTime(volumeValue, audioContext.currentTime);
+            }
+    
+            // Schedule next check
+            setTimeout(processAudio, 1000);
+        }
+
+        // Process a single frame with physics
+        function processFrame(dt, now) {
+            if (!running) return;
+            
+            // Ensure audio context is running
+            if (audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            // Apply speed settings
+            if (balls.length > 0) {
+                for (let ball of balls) {
+                    const target = ball.octave === BASS_OCTAVE ? parseFloat(bassSpeed.value*2) :
+                                  (ball.harmonic ? parseFloat(harmonicsSpeed.value*2) : parseFloat(melodySpeed.value*2));
+                    
+                    const mag = Math.hypot(ball.vx, ball.vy);
+                    if (mag > 1e-6) {
+                        const scale = target / mag;
+                        ball.vx *= scale;
+                        ball.vy *= scale;
+                    } else {
+                        const ang = Math.random() * 2 * Math.PI;
+                        ball.vx = Math.cos(ang) * target;
+                        ball.vy = Math.sin(ang) * target;
+                    }
+                }
+            }
+            
+            // Move and check collisions
+            for (let i = 0; i < balls.length; i++) {
+                const ball = balls[i];
+                ball.move(dt);
+                
+                // Wall collision
+                let hit = false;
+                if (ball.x - BALL_RADIUS <= 0) {
+                    ball.x = BALL_RADIUS;
+                    ball.vx = Math.abs(ball.vx);
+                    hit = true;
+                } else if (ball.x + BALL_RADIUS >= WIDTH) {
+                    ball.x = WIDTH - BALL_RADIUS;
+                    ball.vx = -Math.abs(ball.vx);
+                    hit = true;
+                }
+                
+                if (ball.y - BALL_RADIUS <= 0) {
+                    ball.y = BALL_RADIUS;
+                    ball.vy = Math.abs(ball.vy);
+                    hit = true;
+                } else if (ball.y + BALL_RADIUS >= HEIGHT) {
+                    ball.y = HEIGHT - BALL_RADIUS;
+                    ball.vy = -Math.abs(ball.vy);
+                    hit = true;
+                }
+                
+                if (hit) {
+                    const files = chooseNoteForHit(scaleNotes, ball.octave, ball.harmonic, false);
+                    for (let f of files) {
+                        if (f) playWavAsync(f);
+                    }
+                }
+                
+                // Ball-ball collisions
+                for (let j = i + 1; j < balls.length; j++) {
+                    const other = balls[j];
+                    const dx = other.x - ball.x;
+                    const dy = other.y - ball.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if (dist < 2 * BALL_RADIUS && dist > 0.001) {
+                        const nx = dx / dist;
+                        const ny = dy / dist;
+                        
+                        const v1n = ball.vx * nx + ball.vy * ny;
+                        const v2n = other.vx * nx + other.vy * ny;
+                        
+                        if (v1n - v2n > 0) {
+                            const v1t = ball.vx - v1n * nx;
+                            const v2t = other.vx - v2n * nx;
+                            
+                            ball.vx = v2n * nx + v1t;
+                            ball.vy = v2n * ny + (ball.vy - v1n * ny);
+                            other.vx = v1n * nx + v2t;
+                            other.vy = v1n * ny + (other.vy - v2n * ny);
+                            
+                            const overlap = 2 * BALL_RADIUS - dist;
+                            ball.x -= nx * overlap / 2;
+                            ball.y -= ny * overlap / 2;
+                            other.x += nx * overlap / 2;
+                            other.y += ny * overlap / 2;
+                            
+                            for (let b of [ball, other]) {
+                                if (now-b.prevCollisionTime < 0.2) {
+                                    b.prevCollisionTime = now; // Prevent multiple rapid collisions
+                                }
+                                else {
+                                    b.prevCollisionTime = now;
+                                    const files = chooseNoteForHit(scaleNotes, b.octave, b.harmonic, b.octave === BASS_OCTAVE);
+                                    for (let f of files) {
+                                        if (f) playWavAsync(f);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Draw
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+            
+            for (let ball of balls) {
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, BALL_RADIUS, 0, 2 * Math.PI);
+                ctx.fillStyle = ball.color;
+                ctx.fill();
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+        }
+
+        async function start() {
+            if (running) return;
+            
+            await initAudio();
+            
+            // Ensure audio context is running
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+            }
+            
+            updateScale();
+            
+            const r = BALL_RADIUS;
+            
+            function randPos() {
+                return {
+                    x: Math.random() * (WIDTH - 2 * r) + r,
+                    y: Math.random() * (HEIGHT - 2 * r) + r
+                };
+            }
+            
+            balls = [];
+            const numBalls = parseInt(ballsSelect.value);
+            
+            for (let n = 0; n < numBalls; n++) {
+                const angle = Math.random() * 2 * Math.PI;
+                const speed = parseFloat(melodySpeed.value);
+                const vx = Math.cos(angle) * speed;
+                const vy = Math.sin(angle) * speed;
+                
+                let attempts = 0;
+                const color = BALL_COLOURS[n % BALL_COLOURS.length];
+                
+                while (attempts < 50) {
+                    const pos = randPos();
+                    let overlap = false;
+                    
+                    for (let m = 0; m < balls.length; m++) {
+                        if (Math.hypot(pos.x - balls[m].x, pos.y - balls[m].y) < 2 * r) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!overlap) {
+                        balls.push(new Ball(
+                            pos.x, pos.y, vx, vy, color, 
+                            OCTAVE_SELECTION[n % OCTAVE_SELECTION.length], 
+                            HARMONIC_BALLS[n % HARMONIC_BALLS.length]
+                        ));
+                        break;
+                    }
+                    attempts++;
+                }
+            }
+            
+            running = true;
+            startTime = performance.now() / 1000;
+            lastTime = startTime;
+            
+            // Initialize and start timing worker
+            initTimingWorker();
+            timingWorker.postMessage({ command: 'start' });
+            
+            // Start background if selected
+            const sel = bgSelect.value;
+            if (sel && sel !== '(none)') {
+                playBackgroundLoop(`${SOUNDS_DIR}/background/${sel}`);
+            }
+        }
+
+        // Stop simulation
+        function stop() {
+            running = false;
+            bgStop = true;
+            if (timingWorker) {
+                timingWorker.postMessage({ command: 'stop' });
+                timingWorker.terminate();
+                timingWorker = null;
+            }
+            if (bgSource) {
+                try {
+                    bgSource.stop();
+                } catch (e) {}
+            }
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+            }
+        }
+
+        // Event listeners
+        keySelect.addEventListener('change', updateScale);
+        scaleSelect.addEventListener('change', updateScale);
+        
+        sizeSlider.addEventListener('input', function() {
+            document.getElementById('size-value').textContent = this.value + 'x';
+            updateBallSize();
+        });
+        
+        sizeSlider.addEventListener('volumeSlider', function() {
+            document.getElementById('size-value').textContent = this.value + 'x';
+            setVolume(this.value);
+        });
+
+        melodySpeed.addEventListener('input', function() {
+            document.getElementById('melody-value').textContent = this.value;
+        });
+        
+        bassSpeed.addEventListener('input', function() {
+            document.getElementById('bass-value').textContent = this.value;
+        });
+        
+        harmonicsSpeed.addEventListener('input', function() {
+            document.getElementById('harmonics-value').textContent = this.value;
+        });
+        
+        bgSelect.addEventListener('change', updateBackgroundColour);
+        
+        startBtn.addEventListener('click', function() {
+            stop(); // Clean up any existing animation
+            start();
+        });
+        
+        stopBtn.addEventListener('click', stop);
+        
+        // Initialize
+        updateScale();
+        
+        // Load sounds directory
+        loadSoundsDirectory();
+        
+        console.log('Sound Balls Web App initialized with Worker timing');
+    </script>
+</body>
+</html>
