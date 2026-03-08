@@ -1,5 +1,5 @@
 {
-  "note_folders": ["piano", "bells", "pad"],
+  "note_folders": ["piano", "bells"],
   "note_files": {
     "piano": [
       "Piano.ff.C2.wav", "Piano.ff.Db2.wav", "Piano.ff.D2.wav", "Piano.ff.Eb2.wav", "Piano.ff.E2.wav", "Piano.ff.F2.wav", "Piano.ff.Gb2.wav", "Piano.ff.G2.wav", "Piano.ff.Ab2.wav", "Piano.ff.A2.wav", "Piano.ff.Bb2.wav", "Piano.ff.B2.wav",
@@ -14,8 +14,7 @@
       "Bells.ff.C3.wav", "Bells.ff.Db3.wav", "Bells.ff.D3.wav", "Bells.ff.Eb3.wav", "Bells.ff.E3.wav", "Bells.ff.F3.wav", "Bells.ff.Gb3.wav", "Bells.ff.G3.wav", "Bells.ff.Ab3.wav", "Bells.ff.A3.wav", "Bells.ff.Bb3.wav", "Bells.ff.B3.wav",
       "Bells.ff.C4.wav", "Bells.ff.Db4.wav", "Bells.ff.D4.wav", "Bells.ff.Eb4.wav", "Bells.ff.E4.wav", "Bells.ff.F4.wav", "Bells.ff.Gb4.wav", "Bells.ff.G4.wav", "Bells.ff.Ab4.wav", "Bells.ff.A4.wav", "Bells.ff.Bb4.wav", "Bells.ff.B4.wav",
       "Bells.ff.C5.wav", "Bells.ff.Db5.wav", "Bells.ff.D5.wav", "Bells.ff.Eb5.wav", "Bells.ff.E5.wav", "Bells.ff.F5.wav", "Bells.ff.Gb5.wav", "Bells.ff.G5.wav", "Bells.ff.Ab5.wav", "Bells.ff.A5.wav", "Bells.ff.Bb5.wav", "Bells.ff.B5.wav",
-      "Bells.ff.C6.wav", "Bells.ff.Db6.wav", "Bells.ff.D6.wav", "Bells.ff.Eb6.wav", "Bells.ff.E6.wav", "Bells.ff.F6.wav", "Bells.ff.Gb6.wav", "Bells.ff.G6.wav", "Bells.ff.Ab6.wav", "Bells.ff.A6.wav", "Bells.ff.Bb6.wav", "Bells.ff.B6.wav",
-      "Bells.ff.C7.wav", "Bells.ff.Db7.wav", "Bells.ff.D7.wav", "Bells.ff.Eb7.wav", "Bells.ff.E7.wav", "Bells.ff.F7.wav", "Bells.ff.Gb7.wav", "Bells.ff.G7.wav", "Bells.ff.Ab7.wav", "Bells.ff.A7.wav", "Bells.ff.Bb7.wav", "Bells.ff.B7.wav"
+      "Bells.ff.C6.wav"
     ]
   },
   "background_files": [
