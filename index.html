@@ -197,7 +197,7 @@
         const BASE_BALL_RADIUS = 26;
         let BALL_RADIUS = BASE_BALL_RADIUS;
         const BALL_COLOURS = ['lightblue', 'palegreen', 'greenyellow', 'lightpink', 'pink', 'powderpink','lightgreen', 'mediumspringgreen', 'mistyrose', 'lightskyblue'];
-        const BACKGROUND_COLOURS = ['black', 'green', 'blue', 'lightslategray', 'skyblue', 'darkslategray'];
+        const BACKGROUND_COLOURS = ['black', 'green', 'firebrick', 'midnightblue', 'blue', 'lightslategray', 'aqua', 'skyblue', 'dimgrey'];
         const OCTAVE_SELECTION = [2,4,5,6,7,7,4,5,7,2];
         const HARMONIC_BALLS = [false, false, false, true, true, true,false,false,true,false];
         const BASS_OCTAVE = 2;
@@ -219,7 +219,6 @@
 
         };
 
-        // Global variables
         let canvas = document.getElementById('canvas');
         let ctx = canvas.getContext('2d');
         let audioContext = null;
@@ -241,7 +240,6 @@
         // Worker for timing
         let timingWorker = null;
         
-        // DOM elements
         const keySelect = document.getElementById('key-select');
         const scaleSelect = document.getElementById('scale-select');
         const ballsSelect = document.getElementById('balls-select');
@@ -256,13 +254,11 @@
         const statusEl = document.getElementById('status');
         const volumeSlider = document.getElementById('volume');
         
-        // Display values
         document.getElementById('size-value').textContent = sizeSlider.value + 'x';
         document.getElementById('melody-value').textContent = melodySpeed.value;
         document.getElementById('bass-value').textContent = bassSpeed.value;
         document.getElementById('harmonics-value').textContent = harmonicsSpeed.value;
 
-        // Ball class
         class Ball {
             constructor(x, y, vx, vy, color, octave, harmonic) {
                 this.x = x;
@@ -281,13 +277,11 @@
             }
         }
 
-        // Initialize timing worker
         function initTimingWorker() {
             if (timingWorker) {
                 timingWorker.terminate();
             }
             
-            // Create worker blob
             const workerBlob = new Blob([`
                 let lastTime = null;
                 let running = false;
@@ -332,7 +326,6 @@
             });
         }
 
-        // Initialize audio context on first user interaction
         function initAudio() {
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -344,24 +337,17 @@
             return audioContext;
         }
 
-        // Load directory contents from server
         async function loadSoundsDirectory() {
             statusEl.textContent = 'Loading sounds...';
             
             try {
-                // Try PHP endpoint first, then Python endpoint
-                //let response = await fetch('/list-sounds.php');                
-                //if (!response.ok) {
-                    response = await fetch(' sounds.json');
-                //}
+                response = await fetch(' sounds.json');
                 const data = await response.json();
                 
-                // Populate note folders
                 noteFolders = data.note_folders;
             
                 folderSelect.innerHTML = '';
                 if (noteFolders.length === 0) {
-                    // Fallback to default if no folders found
                     folderSelect.innerHTML = '<option value="piano">piano</option>';
                     noteFolders = ['piano'];
                 } else {
@@ -376,7 +362,6 @@
                     }
                 }
                 
-                // Populate background files
                 if (data.background_files && data.background_files.length > 0) {
                     for (let bgFile of data.background_files) {
                         const option = document.createElement('option');
@@ -386,7 +371,6 @@
                     }
                 }
                 
-                // Store note file mappings
                 if (data.note_files) {
                     for (let folder in data.note_files) {
                         // Parse note names from filenames
@@ -394,9 +378,21 @@
                         noteFiles[folder] = {};
                         
                         for (let file of files) {
-                            // Try to extract note name from filename
-                            // Common patterns: Piano.ff.C4.wav, C4.wav, etc.
-                            let noteName = file.replace('.wav', '').split('.').pop();
+ 
+                            let noteName = file.replace('.wav', '');
+                            let parts;
+
+                            // Try splitting by '.' first
+                            if (noteName.includes('.')) {
+                                parts = noteName.split('.');
+                                noteName = parts[parts.length - 1]; // Get the last part after last dot
+                            } 
+                            // If no dot found or the last part doesn't match a chromatic note, try splitting by '_'
+                            else if (noteName.includes('_')) {
+                                parts = noteName.split('_');
+                                noteName = parts[parts.length - 2]; // Get the last part after last underscore
+                            }
+
                             if (CHROMATIC.some(note => noteName.startsWith(note))) {
                                 noteFiles[folder][noteName] = `${SOUNDS_DIR}/${folder}/${file}`;
                             }
@@ -434,7 +430,7 @@
             window.noteFiles = {};
             
             for (let note of CHROMATIC) {
-                for (let octave of [2,3,4,5,6,7]) {
+                for (let octave of [2,3,4,5,6,7,8]) {
                     const noteName = `${note}${octave}`;
                     const possiblePaths = [
                         `${SOUNDS_DIR}/${folder}/${noteName}.wav`,
@@ -564,7 +560,7 @@
             if (window.noteFiles) {
                 const keys = Object.keys(window.noteFiles);
                 if (keys.length > 0) {
-                    return window.noteFiles[keys[Math.floor(Math.random() * keys.length)]];
+                    //return window.noteFiles[keys[Math.floor(Math.random() * keys.length)]];
                 }
             }
             
@@ -658,8 +654,6 @@
             if (sel && sel !== '(none)') {
                 playBackgroundLoop(`${SOUNDS_DIR}/background/${sel}`);
             }
-
-            
         }
 
         folderSelect.addEventListener('change', async function() {
@@ -687,10 +681,8 @@
             setTimeout(processAudio, 1000);
         }
 
-        // Process a single frame with physics
         function processFrame(dt, now) {
-            if (!running) return;
-            
+            if (!running) return;            
             // Ensure audio context is running
             if (audioContext && audioContext.state === 'suspended') {
                 audioContext.resume();
@@ -795,7 +787,6 @@
                 }
             }
             
-            // Draw
             ctx.clearRect(0, 0, WIDTH, HEIGHT);
             
             for (let ball of balls) {
@@ -894,7 +885,6 @@
             }
         }
 
-        // Event listeners
         keySelect.addEventListener('change', updateScale);
         scaleSelect.addEventListener('change', updateScale);
         
@@ -923,7 +913,7 @@
         bgSelect.addEventListener('change', updateBackgroundColour);
         
         startBtn.addEventListener('click', function() {
-            stop(); // Clean up any existing animation
+            stop();
             start();
         });
         
