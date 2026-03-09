@@ -810,6 +810,7 @@
                 await audioContext.resume();
             }
             
+            playBackgroundLoop(bgSelect.value && bgSelect.value !== '(none)' ? `${SOUNDS_DIR}/background/${bgSelect.value}` : null);
             updateScale();
             
             const r = BALL_RADIUS;
