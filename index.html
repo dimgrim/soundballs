@@ -269,6 +269,7 @@
                 this.octave = octave;
                 this.harmonic = harmonic;
                 this.prevCollisionTime = 0;
+                this.prevNote = "";
             }
             
             move(dt) {
@@ -583,6 +584,8 @@
         function chooseNoteForHit(scaleNotes, octave, harmonic, collision = false) {
             const chosen = [];
             
+            scaleNotes = scaleNotes.filter(note => note !== prevNote);
+
             if (collision) {
                 if (!scaleNotes || scaleNotes.length === 0) return [];
                 
@@ -617,9 +620,8 @@
                     const octv = String(octave);
                     chosen.push(findNoteFile(name + octv));
                 }
-                
             }
-
+            prevNote = name;
             return chosen.filter(c => c);
         }
 
@@ -771,7 +773,7 @@
                             other.y += ny * overlap / 2;
                             
                             for (let b of [ball, other]) {
-                                if (now-b.prevCollisionTime < 0.2) {
+                                if (now-b.prevCollisionTime < 0.25) {
                                     b.prevCollisionTime = now; // Prevent multiple rapid collisions
                                 }
                                 else {
