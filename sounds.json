@@ -212,6 +212,7 @@
     ]
   },
   "background_files": [
+    "bar.wav",
     "birds.wav",
     "fire.wav",
     "night.wav",
@@ -219,6 +220,7 @@
     "rain.wav",
     "sea.wav",
     "seagulls.wav",
-    "vinyl.wav"
+    "vinyl.wav",
+    "whales.wav"
   ]
 }

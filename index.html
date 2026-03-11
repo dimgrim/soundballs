@@ -197,7 +197,7 @@
         const BASE_BALL_RADIUS = 26;
         let BALL_RADIUS = BASE_BALL_RADIUS;
         const BALL_COLOURS = ['lightblue', 'palegreen', 'greenyellow', 'lightpink', 'pink', 'powderpink','lightgreen', 'mediumspringgreen', 'mistyrose', 'lightskyblue'];
-        const BACKGROUND_COLOURS = ['black', 'green', 'firebrick', 'midnightblue', 'blue', 'lightslategray', 'aqua', 'skyblue', 'dimgrey'];
+        const BACKGROUND_COLOURS = ['black', 'bisque', 'green', 'firebrick', 'midnightblue', 'blue', 'lightslategray', 'aqua', 'skyblue', 'dimgrey', 'darkslategray'];
         const OCTAVE_SELECTION = [2,4,5,6,7,7,4,5,7,2];
         const HARMONIC_BALLS = [false, false, false, true, true, true,false,false,true,false];
         const BASS_OCTAVE = 2;
@@ -269,12 +269,77 @@
                 this.octave = octave;
                 this.harmonic = harmonic;
                 this.prevCollisionTime = 0;
-                this.prevNote = "";
+                this.prevNote = '';
             }
             
             move(dt) {
                 this.x += this.vx * dt;
                 this.y += this.vy * dt;
+            }
+
+            chooseNoteForHit(scaleNotes, octave, harmonic, collision) {
+                const chosen = [];
+
+                //I don't want bass and harmonic balls to play the same note twice in a row
+                let availableNotes = scaleNotes.filter(note => note !== this.prevNote);
+
+                if (collision) {
+
+                    const now = performance.now();
+                    if (now - this.prevCollisionTime < 250) {
+                        //do nothing
+                        const a = 1;
+                    }
+                    else if ((now - this.prevCollisionTime >= 250) && (now - this.prevCollisionTime <500 )){
+                        const currentIndex = scaleNotes.indexOf(this.prevNote);
+                        const nextIndex = (currentIndex+1) % scaleNotes.length;
+                        const name = scaleNotes[nextIndex];
+                        const octv = String(octave);
+                        chosen.push(findNoteFile(name + octv));
+                    }
+                    else {
+                        if (!availableNotes || availableNotes.length === 0) return [];
+                        
+                        if (!harmonic && octave === BASS_OCTAVE) {
+                            const rootIdx = Math.floor(Math.random() * availableNotes.length);
+                            const degrees = [rootIdx, (rootIdx + 2) % availableNotes.length, (rootIdx + 4) % availableNotes.length];
+                            const offsets = [0, Math.floor((rootIdx+2)/availableNotes.length), Math.floor((rootIdx+4)/availableNotes.length)];
+                            for (let i = 0; i < degrees.length; i++) {
+                                const name = availableNotes[degrees[i]];
+                                const octv = String(octave+offsets[i]); 
+                                chosen.push(findNoteFile(name + octv));
+                            }
+                            this.prevNote = name;
+                        } 
+                        else {
+                            const scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
+                            const name = scaleHarmonics[Math.floor(Math.random() * scaleHarmonics.length)];
+                            const octv = String(octave);
+                            chosen.push(findNoteFile(name + octv));
+                        }
+                    }
+                    this.prevCollisionTime = now;
+                } 
+                else {
+                    if (!availableNotes || availableNotes.length === 0) return [];
+                    
+                    if (!harmonic) {
+                        const name = availableNotes[Math.floor(Math.random() * availableNotes.length)];
+                        const octv = String(Math.random() > 0.5 ? octave : octave + 1);
+                        chosen.push(findNoteFile(name + octv));
+                        this.prevNote = name;
+                    } 
+                    else {
+                        const scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
+                        const name = scaleHarmonics[Math.floor(Math.random() * scaleHarmonics.length)];
+                        const octv = String(octave);
+                        chosen.push(findNoteFile(name + octv));
+                    }
+                }
+
+                chosen.forEach(element => { console.log(element); });
+
+                return chosen.filter(c => c);
             }
         }
 
@@ -290,7 +355,7 @@
                 self.addEventListener('message', function(e) {
                     if (e.data.command === 'start') {
                         running = true;
-                        lastTime = performance.now() / 1000;
+                        lastTime = performance.now();
                         tick();
                     } else if (e.data.command === 'stop') {
                         running = false;
@@ -300,7 +365,7 @@
                 function tick() {
                     if (!running) return;
                     
-                    const now = performance.now() / 1000;
+                    const now = performance.now();
                     const dt = lastTime ? Math.min(now - lastTime, 0.1) : 0.016;
                     lastTime = now;
                     
@@ -581,50 +646,6 @@
             return notes;
         }
 
-        function chooseNoteForHit(scaleNotes, octave, harmonic, collision = false) {
-            const chosen = [];
-            
-            scaleNotes = scaleNotes.filter(note => note !== prevNote);
-
-            if (collision) {
-                if (!scaleNotes || scaleNotes.length === 0) return [];
-                
-                if (!harmonic && octave === BASS_OCTAVE) {
-                    const rootIdx = Math.floor(Math.random() * scaleNotes.length);
-                    const degrees = [rootIdx, (rootIdx + 2) % scaleNotes.length, (rootIdx + 4) % scaleNotes.length];
-                    const offsets = [0, Math.floor((rootIdx+2)/scaleNotes.length), Math.floor((rootIdx+4)/scaleNotes.length)];
-                    for (let i = 0; i < degrees.length; i++) {
-                        const name = scaleNotes[degrees[i]];
-                        const octv = String(octave+offsets[i]); 
-                        chosen.push(findNoteFile(name + octv));
-                        //chosen.forEach(element => { console.log(element); });
-                    }
-                } 
-                else {
-                    scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
-                    const name = scaleHarmonics[Math.floor(Math.random() * scaleHarmonics.length)];
-                    const octv = String(octave);
-                    chosen.push(findNoteFile(name + octv));
-                }
-            } 
-            else {
-                if (!scaleNotes || scaleNotes.length === 0) return [];
-                
-                if (!harmonic) {
-                    const name = scaleNotes[Math.floor(Math.random() * scaleNotes.length)];
-                    const octv = String(Math.random() > 0.5 ? octave : octave + 1);
-                    chosen.push(findNoteFile(name + octv));
-                } else {
-                    scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
-                    const name = scaleHarmonics[Math.floor(Math.random() * scaleHarmonics.length)];
-                    const octv = String(octave);
-                    chosen.push(findNoteFile(name + octv));
-                }
-            }
-            prevNote = name;
-            return chosen.filter(c => c);
-        }
-
         // Update scale
         function updateScale() {
             scaleNotes = buildScale(keySelect.value, scaleSelect.value);
@@ -693,8 +714,8 @@
             // Apply speed settings
             if (balls.length > 0) {
                 for (let ball of balls) {
-                    const target = ball.octave === BASS_OCTAVE ? parseFloat(bassSpeed.value*2) :
-                                  (ball.harmonic ? parseFloat(harmonicsSpeed.value*2) : parseFloat(melodySpeed.value*2));
+                    const target = ball.octave === BASS_OCTAVE ? parseFloat(bassSpeed.value*0.5) :
+                                  (ball.harmonic ? parseFloat(harmonicsSpeed.value*0.5) : parseFloat(melodySpeed.value*0.5));
                     
                     const mag = Math.hypot(ball.vx, ball.vy);
                     if (mag > 1e-6) {
@@ -737,7 +758,7 @@
                 }
                 
                 if (hit) {
-                    const files = chooseNoteForHit(scaleNotes, ball.octave, ball.harmonic, false);
+                    const files = ball.chooseNoteForHit(scaleNotes, ball.octave, ball.harmonic,  false);
                     for (let f of files) {
                         if (f) playWavAsync(f);
                     }
@@ -772,16 +793,10 @@
                             other.x += nx * overlap / 2;
                             other.y += ny * overlap / 2;
                             
-                            for (let b of [ball, other]) {
-                                if (now-b.prevCollisionTime < 0.25) {
-                                    b.prevCollisionTime = now; // Prevent multiple rapid collisions
-                                }
-                                else {
-                                    b.prevCollisionTime = now;
-                                    const files = chooseNoteForHit(scaleNotes, b.octave, b.harmonic, b.octave === BASS_OCTAVE);
-                                    for (let f of files) {
-                                        if (f) playWavAsync(f);
-                                    }
+                             for (let b of [ball, other]) {
+                                const files = b.chooseNoteForHit(scaleNotes, b.octave, b.harmonic, true);
+                                for (let f of files) {
+                                    if (f) playWavAsync(f);
                                 }
                             }
                         }
@@ -860,7 +875,7 @@
             }
             
             running = true;
-            startTime = performance.now() / 1000;
+            startTime = performance.now();
             lastTime = startTime;
             
             // Initialize and start timing worker
