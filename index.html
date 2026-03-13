@@ -184,8 +184,8 @@
             </div>
             <div class="slider-style">
                 <label>Reverb:</label>
-                <input type="range" id="reverb-amount" min="0" max="1" step="0.01" value="0.3">
-                <span class="slider-label" id="reverb-value">0.3</span>
+                <input type="range" id="reverb-amount" min="0" max="1" step="0.01" value="0.5">
+                <span class="slider-label" id="reverb-value">50%</span>
             </div>
             <button id="start-btn">Start</button>
             <button id="stop-btn">Stop</button>
@@ -200,10 +200,10 @@
         const HEIGHT = WIDTH/2;
         const BASE_BALL_RADIUS = 26;
         let BALL_RADIUS = BASE_BALL_RADIUS;
-        const BALL_COLOURS = ['lightblue', 'palegreen', 'greenyellow', 'lightpink', 'pink', 'powderpink','lightgreen', 'mediumspringgreen', 'mistyrose', 'lightskyblue'];
+        const BALL_COLOURS = ['lightblue', 'palegreen', 'lightpink', 'greenyellow', 'pink', 'lightgreen','powderpink', 'mediumspringgreen', 'mistyrose', 'lightskyblue'];
         const BACKGROUND_COLOURS = ['black', 'bisque', 'green', 'firebrick', 'midnightblue', 'blue', 'lightslategray', 'aqua', 'skyblue', 'dimgrey', 'darkslategray'];
-        const OCTAVE_SELECTION = [2,4,5,6,7,7,4,5,7,2];
-        const HARMONIC_BALLS = [false, false, false, true, true, true,false,false,true,false];
+        const OCTAVE_SELECTION = [2,4,6,4,7,4,7,5,7,2];
+        const HARMONIC_BALLS = [false, false, true, false, true, false,true,false,true,false];
         const BASS_OCTAVE = 2;
         const CHROMATIC = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
         
