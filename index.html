@@ -196,18 +196,18 @@
         const HEIGHT = WIDTH/2;
         const BASE_BALL_RADIUS = 26;
         let BALL_RADIUS = BASE_BALL_RADIUS;
-        const BALL_COLOURS = ['lightblue', 'palegreen', 'lightpink', 'greenyellow', 'pink', 'lightgreen','powderpink', 'mediumspringgreen', 'mistyrose', 'lightskyblue'];
+        const BALL_COLOURS = ['lightblue', 'palegreen', 'lightpink', 'greenyellow', 'pink', 'lightgreen','palevioletred', 'mediumspringgreen', 'mistyrose', 'lightskyblue'];
         const BACKGROUND_COLOURS = ['black', 'bisque', 'green', 'firebrick', 'midnightblue', 'blue', 'lightslategray', 'aqua', 'skyblue', 'dimgrey', 'darkslategray'];
         const OCTAVE_SELECTION = [2,4,6,4,7,4,7,5,7,2];
-        const HARMONIC_BALLS = [false, false, true, false, true, false,true,false,true,false];
+        const HARMONIC_BALLS = [false, false, true, false, true, false, true, false, true, false];
         const BASS_OCTAVE = 2;
         const CHROMATIC = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
-        
         const SCALES = {
             "Major": [0,2,4,5,7,9,11],
             "Minor": [0,2,3,5,7,8,10],
             "Pentatonic": [0,2,4,7,9],
             "Minor Pentatonic": [0,3,5,7,10],
+            "Blues": [0,3,4,5,7,10],
             "Dorian": [0,2,3,5,7,9,10],
             "Phrygian": [0,1,3,5,7,8,10],
             "Lydian": [0,2,4,6,7,9,11],
@@ -217,6 +217,36 @@
             "Melodic Minor": [0,2,3,5,7,9,11],
             "Chromatic": [...Array(12).keys()],
         };
+        const CHARACTERISTIC_NOTES = {
+            "Major": [0, 4, 7],    
+            "Minor": [0, 3, 7],     
+            "Pentatonic": [0, 4, 7],     
+            "Minor Pentatonic": [0, 3, 7],  
+            "Blues": [0, 3, 5, 7],          
+            "Dorian": [0, 2, 7],       
+            "Phrygian": [0, 1, 5],    
+            "Lydian": [0, 4, 7, 11],      
+            "Mixolydian": [0, 4, 7, 10],   
+            "Locrian": [0, 1, 5],   
+            "Harmonic Minor": [0, 3, 7, 8],
+            "Melodic Minor": [0, 3, 7, 9], 
+            "Chromatic": [...Array(12).keys()],  
+        };
+        const EXCLUDE_CHORDS = {
+            "Major": [11],    
+            "Minor": [8],     
+            "Pentatonic": [],     
+            "Minor Pentatonic": [],  
+            "Blues": [4],          
+            "Dorian": [10],       
+            "Phrygian": [1, 8],    
+            "Lydian": [11],      
+            "Mixolydian": [10],   
+            "Locrian": [1, 8],   
+            "Harmonic Minor": [8],
+            "Melodic Minor": [], 
+            "Chromatic": [],  
+        }
 
         let canvas = document.getElementById('canvas');
         let ctx = canvas.getContext('2d');
@@ -232,6 +262,8 @@
         let lastTime = null;
         let animationFrame = null;
         let scaleNotes = [];
+        let characteristicNotes = [];
+        let dissonantChords = [];
         let bgSource = null;
         let bgStop = false;
         let currentNoteFolder = DEFAULT_NOTE_FOLDER_NAME;
@@ -242,6 +274,7 @@
         let timingWorker = null;
         let reverbNode = null;
         let reverbConvolver = null;
+        let probabilityForCharacteristicNotes = 0.63;
         
         const keySelect = document.getElementById('key-select');
         const scaleSelect = document.getElementById('scale-select');
@@ -282,7 +315,7 @@
                 this.y += this.vy * dt;
             }
 
-            chooseNoteForHit(scaleNotes, octave, harmonic, collision) {
+            chooseNoteForHit(scaleNotes, characteristicNotes, dissonantChords, octave, harmonic, collision) {
                 const chosen = [];
                 //I don't want bass and harmonic balls to play the same note twice in a row
                 let availableNotes = scaleNotes.filter(note => note !== this.prevNote);
@@ -297,11 +330,12 @@
                         if (!availableNotes || availableNotes.length === 0) return [];
                         
                         if (!harmonic && octave === BASS_OCTAVE) {
-                            const rootIdx = Math.floor(Math.random() * availableNotes.length);
-                            const degrees = [rootIdx, (rootIdx + 2) % availableNotes.length, (rootIdx + 4) % availableNotes.length];
-                            const offsets = [0, Math.floor((rootIdx+2)/availableNotes.length), Math.floor((rootIdx+4)/availableNotes.length)];
+                            const filteredNotes = availableNotes.filter(note => !dissonantChords.includes(note));
+                            const rootIdx = Math.floor(Math.random() * filteredNotes.length);
+                            const degrees = [rootIdx, (rootIdx + 2) % scaleNotes.length, (rootIdx + 4) % scaleNotes.length];
+                            const offsets = [0, Math.floor((rootIdx+2)/scaleNotes.length), Math.floor((rootIdx+4)/scaleNotes.length)];
                             for (let i = 0; i < degrees.length; i++) {
-                                const name = availableNotes[degrees[i]];
+                                const name = scaleNotes[degrees[i]];
                                 const octv = String(octave+offsets[i]); 
                                 chosen.push(findNoteFile(name + octv));
                             }
@@ -328,7 +362,17 @@
                             chosen.push(findNoteFile(name + octv));
                         }
                         else {
-                            const name = availableNotes[Math.floor(Math.random() * availableNotes.length)];
+                            
+                            const probabil = Math.random();
+                            let filteredNotes = [];
+                            if (probabil < probabilityForCharacteristicNotes) {
+                                filteredNotes = availableNotes.filter(note => characteristicNotes.includes(note));
+                            } 
+                            else {
+                                filteredNotes = availableNotes.filter(note => !characteristicNotes.includes(note));
+                            }
+
+                            const name = filteredNotes[Math.floor(Math.random() * filteredNotes.length)];
                             const octv = String(Math.random() > 0.5 ? octave : octave + 1);
                             chosen.push(findNoteFile(name + octv));
                             this.prevNote = name;
@@ -702,6 +746,38 @@
             scaleNotes = buildScale(keySelect.value, scaleSelect.value);
         }
 
+        function buildCharacteristicNotes(root, scaleName) {
+            if (!CHROMATIC.includes(root)) return [];
+            const intervals = CHARACTERISTIC_NOTES[scaleName] || CHARACTERISTIC_NOTES['Major'];
+            const start = CHROMATIC.indexOf(root);
+            const notes = [];
+            for (let interval of intervals) {
+                const idx = (start + interval) % 12;
+                notes.push(CHROMATIC[idx]);
+            }
+            return notes;
+        }
+
+        function updateCharacteristicNotes() {
+            characteristicNotes = buildCharacteristicNotes(keySelect.value, scaleSelect.value);
+        }
+        
+        function buildDissonantChords(root, scaleName) {
+            if (!CHROMATIC.includes(root)) return [];
+            const intervals = EXCLUDE_CHORDS[scaleName] || EXCLUDE_CHORDS['Major'];
+            const start = CHROMATIC.indexOf(root);
+            const notes = [];
+            for (let interval of intervals) {
+                const idx = (start + interval) % 12;
+                notes.push(CHROMATIC[idx]);
+            }
+            return notes;
+        }
+
+        function updateDissonantChords() {
+            dissonantChords = buildDissonantChords(keySelect.value, scaleSelect.value);
+        }
+
         function updateBallSize() {
             const factor = parseFloat(sizeSlider.value);
             BALL_RADIUS = Math.max(1, Math.floor(BASE_BALL_RADIUS * factor));
@@ -805,7 +881,7 @@
                 }
                 
                 if (hit) {
-                    const files = ball.chooseNoteForHit(scaleNotes, ball.octave, ball.harmonic,  false);
+                    const files = ball.chooseNoteForHit(scaleNotes, characteristicNotes, dissonantChords, ball.octave, ball.harmonic,  false);
                     for (let f of files) {
                         if (f) playWavAsync(f);
                     }
@@ -841,7 +917,7 @@
                             other.y += ny * overlap / 2;
                             
                              for (let b of [ball, other]) {
-                                const files = b.chooseNoteForHit(scaleNotes, b.octave, b.harmonic, true);
+                                const files = b.chooseNoteForHit(scaleNotes, characteristicNotes, dissonantChords, b.octave, b.harmonic, true);
                                 for (let f of files) {
                                     if (f) playWavAsync(f);
                                 }
@@ -875,6 +951,7 @@
             
             playBackgroundLoop(bgSelect.value && bgSelect.value !== '(none)' ? `${SOUNDS_DIR}/background/${bgSelect.value}` : null);
             updateScale();
+            updateCharacteristicNotes();
             
             const r = BALL_RADIUS;
             
