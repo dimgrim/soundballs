@@ -359,7 +359,7 @@
                             const nextIndex = (currentIndex+upordown) % scaleNotes.length;
                             const name = scaleNotes[nextIndex];
                             chosen.push(findNoteFile(name + this.prevOctave));
-                            console.log(`Quick succession detected. Previous note: ${this.prevNote}, current note: ${name}`);
+                            //console.log(`Quick succession detected. Previous note: ${this.prevNote}, current note: ${name}`);
                         }
                         else {
                             const probabil = Math.random();
