@@ -358,7 +358,7 @@
                             const upordown = Math.random() > 0.5 ? 1 : -1;
                             const nextIndex = (currentIndex+upordown) % scaleNotes.length;
                             const name = scaleNotes[nextIndex];
-                            const octv = this.prevOctave;
+                            const octv = String(this.prevOctave);
                             chosen.push(findNoteFile(name + octv));
                             //console.log(`Quick succession detected. Previous note: ${this.prevNote}, current note: ${name}`);
                         }
@@ -421,21 +421,6 @@
                 
             } catch (error) {
                 console.error('Failed to load reverb.wav, using synthetic reverb instead:', error);
-                
-                // Fallback to synthetic reverb if file loading fails
-                const sampleRate = audioContext.sampleRate;
-                const length = sampleRate * 2; // 2 second reverb
-                const impulseResponse = audioContext.createBuffer(2, length, sampleRate);
-                
-                for (let channel = 0; channel < 2; channel++) {
-                    const channelData = impulseResponse.getChannelData(channel);
-                    for (let i = 0; i < length; i++) {
-                        // Simple exponential decay
-                        channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2);
-                    }
-                }
-                
-                reverbConvolver.buffer = impulseResponse;
             }
             
             reverbConvolver.connect(reverbWetNode);
