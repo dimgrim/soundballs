@@ -100,7 +100,6 @@
                     <option value="7">7</option>
                     <option value="8">8</option>
                     <option value="9">9</option>
-                    <option value="10">10</option>
                 </select>
             </div>
 
@@ -152,10 +151,10 @@
                     <option value="Mixolydian">Brave</option>
                     <option value="Locrian">Dissonant</option>
                     <option value="Harmonic Minor">Dramatic</option>
+                    <option value="Minor Pentatonic">Soulful</option>
                     <option value="Blues">Bluesy</option>
                     <option value="Melodic Minor">Jazzy</option>
                     <option value="Pentatonic">Basic</option>
-                    <option value="Minor Pentatonic">Soulful</option>
                     <option value="Chromatic">Random</option>
                 </select>
             </div>
@@ -275,7 +274,9 @@
         let timingWorker = null;
         let reverbNode = null;
         let reverbConvolver = null;
-        let probabilityForCharacteristicNotes = 0.63;
+        let probabilityForCharacteristicNotes = 0.60;
+        let bassnote = '';
+        let chordHighestNoteOctave = 0;
         
         const keySelect = document.getElementById('key-select');
         const scaleSelect = document.getElementById('scale-select');
@@ -335,9 +336,11 @@
                             const rootIdx = Math.floor(Math.random() * filteredNotes.length);
                             const degrees = [rootIdx, (rootIdx + 2) % scaleNotes.length, (rootIdx + 4) % scaleNotes.length];
                             const offsets = [0, Math.floor((rootIdx+2)/scaleNotes.length), Math.floor((rootIdx+4)/scaleNotes.length)];
+                            bassnote = scaleNotes[rootIdx];
                             for (let i = 0; i < degrees.length; i++) {
                                 const name = scaleNotes[degrees[i]];
                                 const octv = String(octave+offsets[i]); 
+                                chordHighestNoteOctave = octave+offsets[i];
                                 chosen.push(findNoteFile(name + octv));
                                 this.prevNote = name;
                                 console.log(name+octv);
@@ -377,9 +380,17 @@
                             const name = filteredNotes[Math.floor(Math.random() * filteredNotes.length)];
                             let octv = 0;
                             if (octave !== BASS_OCTAVE) {
-                                octv = String(Math.random() > 0.5 ? octave : octave + 1);
-                            } else {
+                                //prevent melody notes to live in the same octave as bass notes on collision to avoid dissonance
+                                if (chordHighestNoteOctave >= octave) {
+                                    octv = String(octave + 1);
+                                } 
+                                else {
+                                    octv = String(Math.random() > 0.5 ? octave : octave + 1);
+                                }
+                            } 
+                            else {
                                 octv = String(octave);
+                                bassnote = name;
                             }
                             chosen.push(findNoteFile(name + octv));
                             this.prevNote = name;
