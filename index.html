@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="shortcut icon" href="/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sound Balls</title>
@@ -80,6 +81,13 @@
             color: #999;
             font-size: 12px;
             margin-left: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            color: #aaa;
+            margin-top: 20px;
+            font-size: 11px;
         }
     </style>
 </head>
@@ -343,10 +351,11 @@
                                 chordHighestNoteOctave = octave+offsets[i];
                                 chosen.push(findNoteFile(name + octv));
                                 this.prevNote = name;
-                                console.log(name+octv);
+                                //console.log(name+octv);
                             }
                         } 
                         else {
+                            //keep dissonances at bay on collision
                             const scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
                             const name = scaleHarmonics[Math.floor(Math.random() * scaleHarmonics.length)];
                             const octv = String(octave);
@@ -405,7 +414,9 @@
                     }
                 }
                 this.prevCollisionTime = now;
-                chosen.forEach(element => { console.log(element); });
+                chosen.forEach(element => { 
+                    //console.log(element); 
+                });
                 return chosen.filter(c => c);
             }
         }
@@ -435,15 +446,13 @@
                 // Use the loaded WAV as the impulse response
                 reverbConvolver.buffer = impulseResponse;
                 
-                console.log('Reverb initialized with reverb.wav');
+                //console.log('Reverb initialized with reverb.wav');
                 
             } catch (error) {
                 console.error('Failed to load reverb.wav, using synthetic reverb instead:', error);
             }
             
             reverbConvolver.connect(reverbWetNode);
-            
-            console.log('Reverb initialized with wet/dry control');
         }
 
         function initTimingWorker() {
@@ -1080,4 +1089,7 @@
         console.log('Sound Balls Web App initialized');
     </script>
 </body>
+<footer>
+    <p>&copy; 2026 Sound Balls. All Rights Reserved.</p>
+</footer>
 </html>
