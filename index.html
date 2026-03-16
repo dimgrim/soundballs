@@ -142,20 +142,21 @@
             </div>
 
             <div class="slider-style">
-                <label>Scale:</label>
+                <label>Style:</label>
                 <select id="scale-select">
-                    <option value="Major" selected>Major</option>
-                    <option value="Minor">Minor</option>
-                    <option value="Pentatonic">Pentatonic</option>
-                    <option value="Minor Pentatonic">Minor Pentatonic</option>
-                    <option value="Chromatic">Chromatic</option>
-                    <option value="Dorian">Dorian</option>
-                    <option value="Phrygian">Phrygian</option>
-                    <option value="Lydian">Lydian</option>
-                    <option value="Mixolydian">Mixolydian</option>
-                    <option value="Locrian">Locrian</option>
-                    <option value="Harmonic Minor">Harmonic Minor</option>
-                    <option value="Melodic Minor">Melodic Minor</option>
+                    <option value="Major" selected>Joyful</option>
+                    <option value="Minor">Melancholic</option>
+                    <option value="Dorian">Smooth</option>
+                    <option value="Phrygian">Mysterious</option>
+                    <option value="Lydian">Dreamy</option>
+                    <option value="Mixolydian">Brave</option>
+                    <option value="Locrian">Dissonant</option>
+                    <option value="Harmonic Minor">Dramatic</option>
+                    <option value="Blues">Bluesy</option>
+                    <option value="Melodic Minor">Jazzy</option>
+                    <option value="Pentatonic">Basic</option>
+                    <option value="Minor Pentatonic">Soulful</option>
+                    <option value="Chromatic">Random</option>
                 </select>
             </div>
             <div class="slider-style">
@@ -198,9 +199,9 @@
         let BALL_RADIUS = BASE_BALL_RADIUS;
         const BALL_COLOURS = ['lightblue', 'palegreen', 'lightpink', 'greenyellow', 'pink', 'lightgreen','palevioletred', 'mediumspringgreen', 'mistyrose', 'lightskyblue'];
         const BACKGROUND_COLOURS = ['black', 'bisque', 'green', 'firebrick', 'midnightblue', 'blue', 'lightslategray', 'aqua', 'skyblue', 'dimgrey', 'darkslategray'];
-        const OCTAVE_SELECTION = [2,4,6,4,7,4,7,5,7,2];
+        const OCTAVE_SELECTION = [3,4,6,4,7,5,7,5,7,3];
         const HARMONIC_BALLS = [false, false, true, false, true, false, true, false, true, false];
-        const BASS_OCTAVE = 2;
+        const BASS_OCTAVE = 3;
         const CHROMATIC = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
         const SCALES = {
             "Major": [0,2,4,5,7,9,11],
@@ -339,6 +340,7 @@
                                 const octv = String(octave+offsets[i]); 
                                 chosen.push(findNoteFile(name + octv));
                                 this.prevNote = name;
+                                console.log(name+octv);
                             }
                         } 
                         else {
@@ -373,7 +375,12 @@
                             }
 
                             const name = filteredNotes[Math.floor(Math.random() * filteredNotes.length)];
-                            const octv = String(Math.random() > 0.5 ? octave : octave + 1);
+                            let octv = 0;
+                            if (octave !== BASS_OCTAVE) {
+                                octv = String(Math.random() > 0.5 ? octave : octave + 1);
+                            } else {
+                                octv = String(octave);
+                            }
                             chosen.push(findNoteFile(name + octv));
                             this.prevNote = name;
                             this.prevOctave = octave;
@@ -938,6 +945,7 @@
             playBackgroundLoop(bgSelect.value && bgSelect.value !== '(none)' ? `${SOUNDS_DIR}/background/${bgSelect.value}` : null);
             updateScale();
             updateCharacteristicNotes();
+            updateDissonantChords();
             
             const r = BALL_RADIUS;
             
