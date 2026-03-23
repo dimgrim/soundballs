@@ -561,7 +561,7 @@
             statusEl.textContent = 'Loading sounds...';
             
             try {
-                response = await fetch(' sounds.json');
+                response = await fetch('sounds.json');
                 const data = await response.json();
                 
                 noteFolders = data.note_folders;
@@ -785,6 +785,7 @@
             
             return null;
         }
+
 
         function buildScale(root, scaleName) {
             if (!CHROMATIC.includes(root)) return [];
