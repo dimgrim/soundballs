@@ -711,7 +711,7 @@
             statusEl.textContent = `Loaded ${Object.keys(window.noteFiles).length} notes`;
         }
 
-        async function playWavAsync(path, applyReverb = true) {
+        async function playWavAsync(path, isHarmonic, applyReverb = true,) {
             if (!path) return;
             
             try {
@@ -735,7 +735,11 @@
                 source.buffer = audioBuffer;
                 
                 const gainNode = audioContext.createGain();
-                gainNode.gain.value = Math.random() * 0.65 + 0.35;
+                gainNode.gain.value = Math.random() * 0.5 + 0.5;
+
+                if (isHarmonic){
+                    gainNode.gain.value *= 0.4;
+                }
                 
                 if (applyReverb && reverbConvolver) {
                     source.connect(gainNode);
@@ -992,7 +996,7 @@
                 if (hit) {
                     const files = ball.chooseNoteForHit(scaleNotes, characteristicNotes, dissonantChords, ball.octave, ball.harmonic,  false);
                     for (let f of files) {
-                        if (f) playWavAsync(f);
+                        if (f) playWavAsync(f, ball.harmonic);
                     }
                 }
                 
@@ -1028,7 +1032,7 @@
                              for (let b of [ball, other]) {
                                 const files = b.chooseNoteForHit(scaleNotes, characteristicNotes, dissonantChords, b.octave, b.harmonic, true);
                                 for (let f of files) {
-                                    if (f) playWavAsync(f);
+                                    if (f) playWavAsync(f, b.harmonic);
                                 }
                             }
                         }
