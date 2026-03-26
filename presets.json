@@ -1,0 +1,64 @@
+{
+  "schema": {
+    "description": "Reference only - control IDs and their types",
+    "controls": ["balls-select", "folder-select", "bg-select", "volume", "key-select", "scale-select", "size-slider", "bass-speed", "melody-speed", "harmonics-speed", "reverb-amount", "timer-hours", "timer-minutes"]
+  },
+  "presets": {
+    "None": {
+      "balls-select": "3",
+      "folder-select": "piano",
+      "bg-select": "none",
+      "volume": "0.5",
+      "key-select": "C",
+      "scale-select": "Major",
+      "size-slider": "1",
+      "bass-speed": "15",
+      "melody-speed": "30",
+      "harmonics-speed": "10",
+      "reverb-amount": "0.15",
+      "timer-minutes": "30"
+    },
+    "Subnautica": {
+      "balls-select": "4",
+      "folder-select": "rhodes",
+      "bg-select": "whales.wav",
+      "volume": "0.5",
+      "key-select": "D",
+      "scale-select": "Lydian",
+      "size-slider": "1",
+      "bass-speed": "13",
+      "melody-speed": "27",
+      "harmonics-speed": "7",
+      "reverb-amount": "0.35",
+      "timer-minutes": "30"
+    },
+    "Cosy": {
+      "balls-select": "5",
+      "folder-select": "guitar",
+      "bg-select": "fire.wav",
+      "volume": "0.6",
+      "key-select": "Eb",
+      "scale-select": "Major",
+      "size-slider": "0.8",
+      "bass-speed": "15",
+      "melody-speed": "20",
+      "harmonics-speed": "10",
+      "reverb-amount": "0.75",
+      "timer-minutes": "30"
+    },
+    "Classic": {
+      "balls-select": "3",
+      "folder-select": "piano",
+      "bg-select": "rain.wav",
+      "volume": "0.3",
+      "key-select": "Ab",
+      "scale-select": "Minor",
+      "size-slider": "1.1",
+      "bass-speed": "20",
+      "melody-speed": "40",
+      "harmonics-speed": "10",
+      "reverb-amount": "0.2",
+      "timer-minutes": "30"
+    }
+  }
+}
