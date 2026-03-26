@@ -94,14 +94,14 @@
 <body>
     <div id="container">
 
-        <div style="display:flex; background-color: #444; padding: 8px 15px; margin-bottom: 10px; border-radius: 5px; display: flex; align-items: center; gap: 20px; font-size: 13px;">
-            <span style="font-weight: 600; color: pink;">Soundballs</span>
-            <div style="display: flex; align-items: center; gap: 2px;">
-                <span id="preset-label" style="color: #ccc; cursor: pointer; padding: 4px 8px; border-radius: 3px;">Preset:</span>                
-                <select id="preset-select" style="background-color: #666; color: white; border: none; padding: 4px 8px; border-radius: 3px;"></select>
-            </div>
-            <span id="about-link" style="color: #ccc; cursor: pointer; padding: 4px 8px; border-radius: 3px;">About</span>
-        </div>
+<div style="display:flex; background-color: #444; padding: 8px 15px; margin-bottom: 10px; border-radius: 5px; align-items: center; gap: 20px; font-size: 13px; flex-wrap: wrap;">
+    <span style="font-weight: 600; color: pink;">Soundballs</span>
+    <div style="display: flex; align-items: center; gap: 2px;">
+        <span id="preset-label" style="color: #ccc; cursor: pointer; padding: 4px 8px; border-radius: 3px;">Preset:</span>                
+        <select id="preset-select" style="background-color: #666; color: white; border: none; padding: 4px 8px; border-radius: 3px;"></select>
+    </div>
+    <span id="about-link" style="color: #ccc; cursor: pointer; padding: 4px 8px; border-radius: 3px;">About</span>
+</div>
         <div id="about-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
             <div style="background-color: #444; padding: 30px; border-radius: 8px; max-width: 500px; width: 90%; margin: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); border: 1px solid #666;">
                 <h2 style="margin-top: 0; color: #fff; font-size: 18px; border-bottom: 1px solid #666; padding-bottom: 10px;">About Soundballs</h2>
@@ -800,7 +800,10 @@
         }
 
         async function playBackgroundLoop(path) {
-            if (!path) return;
+            if (!path) {
+                bgStop = true;
+                return;
+            }
             
             try {
                 if (!audioContext) await initAudio();
@@ -808,32 +811,29 @@
                 const response = await fetch(path);
                 if (!response.ok) return;
                 
-                arrayBuffer = await response.arrayBuffer();
+                const arrayBuffer = await response.arrayBuffer();
                 const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                
+                if (bgSource) {
+                    try {
+                        bgSource.onended = null;
+                        bgSource.stop();
+                    } catch (e) {}
+                    bgSource = null;
+                }
                 
                 bgStop = false;
                 
-                const playLoop = () => {
+                const createAndPlaySource = () => {
                     if (bgStop || !running) return;
                     
-                    if (audioContext.state === 'suspended') {
-                        audioContext.resume().then(() => {
-                            createAndPlaySource();
-                        });
-                    } 
-                    else {
-                        createAndPlaySource();
-                    }
-                };
-                
-                const createAndPlaySource = () => {
                     const source = audioContext.createBufferSource();
                     source.buffer = audioBuffer;
                     source.connect(bgVolumeNode);
-
+                    
                     source.onended = () => {
-                        if (!bgStop && running) {
-                            playLoop();
+                        if (!bgStop && running && bgSource === source) {
+                            createAndPlaySource();
                         }
                     };
                     
@@ -841,10 +841,11 @@
                     bgSource = source;
                 };
                 
-                playLoop();
+                createAndPlaySource();
                 
             } catch (e) {
                 console.error('Background playback error:', e);
+                bgStop = true;
             }
         }
 
@@ -1229,6 +1230,6 @@
     </script>
 </body>
 <footer>
-    <p>&copy; 2026 Sound Balls. All Rights Reserved.</p>
+    <p>&copy; 2026 Soundballs. All Rights Reserved.</p>
 </footer>
 </html>
