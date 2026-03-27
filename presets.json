@@ -18,32 +18,18 @@
       "reverb-amount": "0.15",
       "timer-minutes": "30"
     },
-    "Subnautica": {
-      "balls-select": "4",
-      "folder-select": "rhodes",
-      "bg-select": "whales.wav",
-      "volume": "0.5",
-      "key-select": "D",
-      "scale-select": "Lydian",
-      "size-slider": "1",
-      "bass-speed": "13",
-      "melody-speed": "27",
-      "harmonics-speed": "7",
-      "reverb-amount": "0.35",
-      "timer-minutes": "30"
-    },
-    "Cosy": {
-      "balls-select": "5",
-      "folder-select": "guitar",
-      "bg-select": "fire.wav",
-      "volume": "0.6",
-      "key-select": "Eb",
-      "scale-select": "Major",
-      "size-slider": "0.8",
-      "bass-speed": "15",
+    "Apollonean": {
+      "balls-select": "6",
+      "folder-select": "harp",
+      "bg-select": "sea.wav",
+      "volume": "0.3",
+      "key-select": "Db",
+      "scale-select": "Frygian",
+      "size-slider": "2",
+      "bass-speed": "10",
       "melody-speed": "20",
-      "harmonics-speed": "10",
-      "reverb-amount": "0.75",
+      "harmonics-speed": "4",
+      "reverb-amount": "0.5",
       "timer-minutes": "30"
     },
     "Classic": {
@@ -58,6 +44,34 @@
       "melody-speed": "40",
       "harmonics-speed": "10",
       "reverb-amount": "0.2",
+      "timer-minutes": "30"
+    },    
+    "Cosy": {
+      "balls-select": "5",
+      "folder-select": "guitar",
+      "bg-select": "fire.wav",
+      "volume": "0.6",
+      "key-select": "Eb",
+      "scale-select": "Major",
+      "size-slider": "0.8",
+      "bass-speed": "15",
+      "melody-speed": "20",
+      "harmonics-speed": "10",
+      "reverb-amount": "0.3",
+      "timer-minutes": "30"
+    },
+    "Subnautica": {
+      "balls-select": "4",
+      "folder-select": "rhodes",
+      "bg-select": "whales.wav",
+      "volume": "0.5",
+      "key-select": "D",
+      "scale-select": "Lydian",
+      "size-slider": "1",
+      "bass-speed": "13",
+      "melody-speed": "27",
+      "harmonics-speed": "7",
+      "reverb-amount": "0.35",
       "timer-minutes": "30"
     }
   }
