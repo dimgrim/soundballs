@@ -60,6 +60,20 @@
       "reverb-amount": "0.3",
       "timer-minutes": "30"
     },
+    "Nocturnal": {
+      "balls-select": "4",
+      "folder-select": "piano",
+      "bg-select": "night.wav",
+      "volume": "0.35",
+      "key-select": "C",
+      "scale-select": "Dorian",
+      "size-slider": "0.5",
+      "bass-speed": "50",
+      "melody-speed": "70",
+      "harmonics-speed": "25",
+      "reverb-amount": "0.5",
+      "timer-minutes": "30"
+    },
     "Subnautica": {
       "balls-select": "4",
       "folder-select": "rhodes",
