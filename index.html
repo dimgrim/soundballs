@@ -46,7 +46,6 @@
             overflow: hidden;
             margin-bottom: 5px;
         }
-
         .timer-style {
             display: flex;
             align-items: center;
@@ -57,7 +56,6 @@
             font-size: 12px;
             overflow: hidden;
         }
-
         select, button {
             padding: 5px;
             border-radius: 3px;
@@ -74,6 +72,7 @@
         }
         label {
             font-size: 12px;
+            font-weight: bold;
         }
         .slider-label {
             display: none;
@@ -101,61 +100,83 @@
             margin-top: 20px;
             font-size: 11px;
         }
-
-            settings-toggle {
-                background-color: #2c3e50;
-                padding: 8px 15px;
-                cursor: pointer;
-                border-radius: 3px;
-                margin-bottom: 10px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                user-select: none;
-                transition: background 0.2s;
-                font-weight: bold;
-                width: 100%;
-            }
-
-            .settings-toggle:hover {
-                background-color: #34495e;
-            }
-
-            .settings-label {
-                font-weight: bold;
-                font-size: 12px;
-            }
-
-            .settings-arrow {
-                transition: transform 0.3s ease;
-                font-size: 12px;
-            }
-
-            .settings-arrow.collapsed {
-                transform: rotate(-90deg);
-            }
-            
-            .settings-content {
-                max-height: 2000px;
-                overflow: hidden;
-                transition: max-height 0.4s ease-out;
-            }
-            
-            .settings-content.collapsed {
-                max-height: 0;
-            }
-            
+        settings-toggle {
+            background-color: #2c3e50;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background 0.2s;
+            font-weight: bold;
+            width: 100%;
+        }
+        .settings-toggle:hover {
+            background-color: #34495e;
+        }
+        .settings-label {
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .settings-arrow {
+            transition: transform 0.3s ease;
+            font-size: 12px;
+        }
+        .settings-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+        .settings-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+        .settings-content.collapsed {
+            max-height: 0;
+        }
+        .size-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background-color: #3a3a3a;
+            padding: 5px 8px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            border-left: 3px solid #ff69b4;
+        }
+        .size-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #4a4a4a;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+        .size-item label {
+            font-weight: bold;
+        }
+        .size-item input {
+            width: 70px;
+        }
+        .size-item span {
+            min-width: 32px;
+            text-align: center;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
     <div id="container">
         <div style="display:flex; background-color: #444; padding: 8px 15px; margin-bottom: 10px; border-radius: 5px; align-items: center; gap: 20px; font-size: 13px; flex-wrap: wrap;">
-            <span style="font-weight: 600; color: pink;">Soundballs</span>
+            <span style="font-weight: 600; color:#ff69b4 ;">Soundballs</span>
             <div style="display: flex; align-items: center; gap: 2px;">
-                <span id="preset-label" style="color: #ccc; cursor: pointer; padding: 4px 8px; border-radius: 3px;">Preset:</span>                
+                <span style="font-weight: 600; color:white;">Preset:</span>                
                 <select id="preset-select" style="background-color: #666; color: white; border: none; padding: 4px 8px; border-radius: 3px;"></select>
             </div>
-            <span id="about-link" style="color: #ccc; cursor: pointer; padding: 4px 8px; border-radius: 3px;">About</span>
+            <span id="about-link" style="font-weight: 600; color:white; cursor: pointer;" >About</span>
 
 
             <div style="flex: 1;"></div>
@@ -195,108 +216,127 @@
         <canvas id="canvas" width=1200 height=600></canvas>
         
         <div class="controls">
-    <!-- Settings Toggle Button -->
-    <div class="settings-toggle" onclick="toggleSettings()">
+
+        <div class="settings-toggle" onclick="toggleSettings()">
         <span class="settings-label">⚙️ Settings</span>
         <span class="settings-arrow">▼</span>
     </div>
     <div id="settings-content" class="settings-content">
-            <div class="slider-style">
-                <label>Balls:</label>
-                <select id="balls-select">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3" selected>3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                </select>
-            </div>
+        <div class="size-group">
+                <div class="size-item">
+                    <label>Balls:</label>
+                    <select id="balls-select">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                </div>
 
-            <div class="slider-style">
-                <label>Instrument:</label>
-                <select id="folder-select">
-                    <option value="">Loading...</option>
-                </select>
-            </div>
+                <div class="size-item">
+                    <label>Instrument:</label>
+                    <select id="folder-select">
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
 
-            <div class="slider-style">
-                <label>Background:</label>
-                <select id="bg-select">
-                    <option value="(none)" selected>(none)</option>
-                </select>
+                <div class="size-item">
+                    <label>Background:</label>
+                    <select id="bg-select">
+                        <option value="(none)" selected>(none)</option>
+                    </select>
+                </div>
+                
+                <div class="size-item">
+                        <label>Instrument</label>
+                        <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
+                        <label>Background</label>
+                </div>
+            </div>
+            <div class = size-group>
+                <div class="size-item">
+                    <label>Key:</label>
+                    <select id="key-select">
+                        <option value="C" selected>C</option>
+                        <option value="Db">Db</option>
+                        <option value="D">D</option>
+                        <option value="Eb">Eb</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="Gb">Gb</option>
+                        <option value="G">G</option>
+                        <option value="Ab">Ab</option>
+                        <option value="A">A</option>
+                        <option value="Bb">Bb</option>
+                        <option value="B">B</option>
+                    </select>
+                </div>
+                <div class="size-item">
+                    <label>Style:</label>
+                    <select id="scale-select">
+                        <option value="Major" selected>Joyful</option>
+                        <option value="Minor">Melancholic</option>
+                        <option value="Dorian">Smooth</option>
+                        <option value="Phrygian">Mysterious</option>
+                        <option value="Lydian">Dreamy</option>
+                        <option value="Mixolydian">Brave</option>
+                        <option value="Locrian">Dissonant</option>
+                        <option value="Harmonic Minor">Dramatic</option>
+                        <option value="Minor Pentatonic">Soulful</option>
+                        <option value="Blues">Bluesy</option>
+                        <option value="Melodic Minor">Jazzy</option>
+                        <option value="Pentatonic">Basic</option>
+                        <option value="Chromatic">Random</option>
+                    </select>
+                </div>
+                <div class="size-item">
+                    <label>Reverb:</label>
+                    <input type="range" id="reverb-amount" min="0" max="1" step="0.01" value="0.10">
+                    <span class="slider-label" id="reverb-value">0.10</span>
+                </div>
             </div>
             
-            <div class="slider-style">
-                    <span class="slider-label-left">Instrument</span>
-                    <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
-                    <span class="slider-label-right">Background</span>
+            <div class="size-group">
+                <div class="size-item">
+                    <label>🔵 Bass Size:</label>
+                    <input type="range" id="bass-size-slider" min="0.5" max="2" step="0.01" value="1">
+                    <span class="slider-label" id="bass-size-value">1.0x</span>
+                </div>
+                <div class="size-item">
+                    <label>🟢 Melody Size:</label>
+                    <input type="range" id="melody-size-slider" min="0.5" max="2" step="0.01" value="1">
+                    <span class="slider-label" id="melody-size-value">1.0x</span>
+                </div>
+                <div class="size-item">
+                    <label>🟣 Harmonics Size:</label>
+                    <input type="range" id="harmonics-size-slider" min="0.5" max="2" step="0.01" value="1">
+                    <span class="slider-label" id="harmonics-size-value">1.0x</span>
+                </div>
             </div>
-                        <div class="slider-style">
-                <label>Key:</label>
-                <select id="key-select">
-                    <option value="C" selected>C</option>
-                    <option value="Db">Db</option>
-                    <option value="D">D</option>
-                    <option value="Eb">Eb</option>
-                    <option value="E">E</option>
-                    <option value="F">F</option>
-                    <option value="Gb">Gb</option>
-                    <option value="G">G</option>
-                    <option value="Ab">Ab</option>
-                    <option value="A">A</option>
-                    <option value="Bb">Bb</option>
-                    <option value="B">B</option>
-                </select>
-            </div>
-
-            <div class="slider-style">
-                <label>Style:</label>
-                <select id="scale-select">
-                    <option value="Major" selected>Joyful</option>
-                    <option value="Minor">Melancholic</option>
-                    <option value="Dorian">Smooth</option>
-                    <option value="Phrygian">Mysterious</option>
-                    <option value="Lydian">Dreamy</option>
-                    <option value="Mixolydian">Brave</option>
-                    <option value="Locrian">Dissonant</option>
-                    <option value="Harmonic Minor">Dramatic</option>
-                    <option value="Minor Pentatonic">Soulful</option>
-                    <option value="Blues">Bluesy</option>
-                    <option value="Melodic Minor">Jazzy</option>
-                    <option value="Pentatonic">Basic</option>
-                    <option value="Chromatic">Random</option>
-                </select>
-            </div>
-            <div class="slider-style">
-                <label>Ball Size:</label>
-                <input type="range" id="size-slider" min="0.5" max="2.0" step="0.01" value="1.0">
-                <span class="slider-label" id="size-value">1.0x</span>
-            </div>
-            <div class="slider-style">
-                <label>Bass Speed:</label>
-                <input type="range" id="bass-speed" min="0" max="100" step="1" value="25">
-                <span class="slider-label" id="bass-value">25</span>
-            </div>
-            <div class="slider-style">
-                <label>Melody Speed:</label>
-                <input type="range" id="melody-speed" min="0" max="100" step="1" value="50">
-                <span class="slider-label" id="melody-value">50</span>
-            </div>
-            <div class="slider-style">
-                <label>Harmonics Speed:</label>
-                <input type="range" id="harmonics-speed" min="0" max="100" step="1" value="12">
-                <span class="slider-label" id="harmonics-value">12</span>
-            </div>
-            <div class="slider-style">
-                <label>Reverb:</label>
-                <input type="range" id="reverb-amount" min="0" max="1" step="0.01" value="0.10">
-                <span class="slider-label" id="reverb-value">0.10</span>
+            <div class = "size-group">
+                <div class="size-item">
+                    <label>🔵 Bass Speed:</label>
+                    <input type="range" id="bass-speed" min="0" max="100" step="1" value="25">
+                    <span class="slider-label" id="bass-value">25</span>
+                </div>
+                <div class="size-item">
+                    <label>🟢 Melody Speed:</label>
+                    <input type="range" id="melody-speed" min="0" max="100" step="1" value="50">
+                    <span class="slider-label" id="melody-value">50</span>
+                </div>
+                <div class="size-item">
+                    <label>🟣 Harmonics Speed:</label>
+                    <input type="range" id="harmonics-speed" min="0" max="100" step="1" value="12">
+                    <span class="slider-label" id="harmonics-value">12</span>
+                </div>
             </div>
 
+            
 
             <span id="status"></span>
         </div>
@@ -309,7 +349,6 @@
         const WIDTH = 1200;
         const HEIGHT = WIDTH/2;
         const BASE_BALL_RADIUS = 26;
-        let BALL_RADIUS = BASE_BALL_RADIUS;
         const BALL_COLOURS = ['lightblue', 'palegreen', 'lightpink', 'greenyellow', 'pink', 'lightgreen','palevioletred', 'mediumspringgreen', 'mistyrose', 'lightskyblue'];
         const BACKGROUND_COLOURS = ['black', 'bisque', 'green', 'firebrick', 'midnightblue', 'blue', 'lightslategray', 'aqua', 'skyblue', 'dimgrey', 'darkslategray'];
         const OCTAVE_SELECTION = [3,4,6,4,7,5,7,5,7,3];
@@ -406,8 +445,7 @@
         arrow.classList.toggle('collapsed');
     }
 
-    // Initialize settings as collapsed by default
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     const content = document.getElementById('settings-content');
     const arrow = document.querySelector('.settings-arrow');
     
@@ -489,7 +527,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const ballsSelect = document.getElementById('balls-select');
         const folderSelect = document.getElementById('folder-select');
         const bgSelect = document.getElementById('bg-select');
-        const sizeSlider = document.getElementById('size-slider');
+        const bassSizeSlider = document.getElementById('bass-size-slider');
+        const melodySizeSlider = document.getElementById('melody-size-slider');
+        const harmonicsSizeSlider = document.getElementById('harmonics-size-slider');
         const melodySpeed = document.getElementById('melody-speed');
         const bassSpeed = document.getElementById('bass-speed');
         const harmonicsSpeed = document.getElementById('harmonics-speed');
@@ -499,7 +539,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const volumeSlider = document.getElementById('volume');
         const reverbAmount = document.getElementById('reverb-amount');
         
-        document.getElementById('size-value').textContent = sizeSlider.value + 'x';
+        document.getElementById('bass-size-value').textContent = bassSizeSlider.value + 'x';
+        document.getElementById('melody-size-value').textContent = melodySizeSlider.value + 'x';
+        document.getElementById('harmonics-size-value').textContent = harmonicsSizeSlider.value + 'x';
         document.getElementById('melody-value').textContent = melodySpeed.value;
         document.getElementById('bass-value').textContent = bassSpeed.value;
         document.getElementById('harmonics-value').textContent = harmonicsSpeed.value;
@@ -521,7 +563,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         class Ball {
-            constructor(x, y, vx, vy, color, octave, harmonic) {
+            constructor(x, y, vx, vy, color, octave, harmonic, radius) {
                 this.x = x;
                 this.y = y;
                 this.vx = vx;
@@ -529,6 +571,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.color = color;
                 this.octave = octave;
                 this.harmonic = harmonic;
+                this.radius = radius;  
                 this.prevCollisionTime = 0;
                 this.prevNote = '';
                 this.prevOctave = 0;
@@ -541,7 +584,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             chooseNoteForHit(scaleNotes, characteristicNotes, dissonantChords, octave, harmonic, collision) {
                 const chosen = [];
-                //I don't want bass and harmonic balls to play the same note twice in a row
                 let availableNotes = scaleNotes.filter(note => note !== this.prevNote);
                 const now = performance.now();
 
@@ -564,11 +606,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 chordHighestNoteOctave = octave+offsets[i];
                                 chosen.push(findNoteFile(name + octv));
                                 this.prevNote = name;
-                                //console.log(name+octv);
                             }
                         } 
                         else {
-                            //keep dissonances at bay on collision
                             const scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
                             const name = scaleHarmonics[Math.floor(Math.random() * scaleHarmonics.length)];
                             const octv = String(octave);
@@ -587,7 +627,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             const name = scaleNotes[nextIndex];
                             const octv = String(this.prevOctave);
                             chosen.push(findNoteFile(name + octv));
-                            //console.log(`Quick succession detected. Previous note: ${this.prevNote}, current note: ${name}`);
                         }
                         else {
                             const probabil = Math.random();
@@ -602,7 +641,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             const name = filteredNotes[Math.floor(Math.random() * filteredNotes.length)];
                             let octv = 0;
                             if (octave !== BASS_OCTAVE) {
-                                //prevent melody notes to live in the same octave as bass notes on collision to avoid dissonance
                                 if (chordHighestNoteOctave >= octave) {
                                     octv = String(octave + 1);
                                 } 
@@ -627,9 +665,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 this.prevCollisionTime = now;
-                chosen.forEach(element => { 
-                    //console.log(element); 
-                });
                 return chosen.filter(c => c);
             }
         }
@@ -656,10 +691,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const arrayBuffer = await response.arrayBuffer();
                 const impulseResponse = await audioContext.decodeAudioData(arrayBuffer);
                 
-                // Use the loaded WAV as the impulse response
                 reverbConvolver.buffer = impulseResponse;
-                
-                //console.log('Reverb initialized with reverb.wav');
                 
             } catch (error) {
                 console.error('Failed to load reverb.wav, using synthetic reverb instead:', error);
@@ -694,15 +726,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     const dt = lastTime ? Math.min(now - lastTime, 0.1) : 0.016;
                     lastTime = now;
                     
-                    // Post timing update to main thread
                     self.postMessage({
                         type: 'timing',
                         dt: dt,
                         now: now
                     });
                     
-                    // Schedule next tick with high precision
-                    setTimeout(tick, 16); // ~60fps
+                    setTimeout(tick, 16);
                 }
             `], { type: 'application/javascript' });
             
@@ -767,7 +797,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         noteFiles[folder] = {};
                         
                         for (let file of files) {
- 
                             let noteName = file.replace('.wav', '');
                             let parts;
 
@@ -864,13 +893,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (applyReverb && reverbConvolver) {
                     source.connect(gainNode);
-                    
                     gainNode.connect(reverbDryNode);
                     reverbDryNode.connect(notesVolumeNode);
-                    
                     gainNode.connect(reverbConvolver);
                     reverbWetNode.connect(notesVolumeNode);
-                    
                 } else {
                     source.connect(gainNode);
                     gainNode.connect(notesVolumeNode);
@@ -933,10 +959,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        const setVolume = (value) => {
-            gainNode.gain.setValueAtTime(value, audioContext.currentTime);
-        };
-
         function findNoteFile(noteName) {
             if (window.noteFiles && window.noteFiles[noteName]) {
                 return window.noteFiles[noteName];
@@ -949,18 +971,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     return window.noteFiles[candidate];
                 }
             }
-            
-            // Fallback random file
-            if (window.noteFiles) {
-                const keys = Object.keys(window.noteFiles);
-                if (keys.length > 0) {
-                    //return window.noteFiles[keys[Math.floor(Math.random() * keys.length)]];
-                }
-            }
-            
             return null;
         }
-
 
         function buildScale(root, scaleName) {
             if (!CHROMATIC.includes(root)) return [];
@@ -1010,28 +1022,22 @@ document.addEventListener('DOMContentLoaded', function() {
             dissonantChords = buildDissonantChords(keySelect.value, scaleSelect.value);
         }
 
-        function updateBallSize() {
-            const factor = parseFloat(sizeSlider.value);
-            BALL_RADIUS = Math.max(1, Math.floor(BASE_BALL_RADIUS * factor));
-            
-            if (balls.length > 0) {
-                for (let ball of balls) {
-                    ball.x = Math.max(BALL_RADIUS, Math.min(WIDTH - BALL_RADIUS, ball.x));
-                    ball.y = Math.max(BALL_RADIUS, Math.min(HEIGHT - BALL_RADIUS, ball.y));
-                }
-            }
+        function getRadiusForBall(octave, harmonic) {
+            const baseFactor = (octave === BASS_OCTAVE) ? parseFloat(bassSizeSlider.value) : 
+                               (harmonic ? parseFloat(harmonicsSizeSlider.value) : parseFloat(melodySizeSlider.value));
+            return Math.max(8, Math.floor(BASE_BALL_RADIUS * baseFactor));
         }
 
         function updateBackgroundColour() {
             const sel = bgSelect.value;
             const index = Array.from(bgSelect.options).findIndex(opt => opt.value === sel);
             canvas.style.backgroundColor = BACKGROUND_COLOURS[index % BACKGROUND_COLOURS.length] || BACKGROUND_COLOURS[0];
-                            bgStop = true;
-                if (bgSource) {
-                    try {
-                        bgSource.stop();
-                    } catch (e) {}
-                }
+            bgStop = true;
+            if (bgSource) {
+                try {
+                    bgSource.stop();
+                } catch (e) {}
+            }
             if (sel && sel !== '(none)') {
                 playBackgroundLoop(`${SOUNDS_DIR}/background/${sel}`);
             }
@@ -1090,45 +1096,46 @@ document.addEventListener('DOMContentLoaded', function() {
             
             for (let i = 0; i < balls.length; i++) {
                 const ball = balls[i];
+                const r = ball.radius;
                 ball.move(dt);
                 
-                // Wall collision
                 let hit = false;
-                if (ball.x - BALL_RADIUS <= 0) {
-                    ball.x = BALL_RADIUS;
+                if (ball.x - r <= 0) {
+                    ball.x = r;
                     ball.vx = Math.abs(ball.vx);
                     hit = true;
-                } else if (ball.x + BALL_RADIUS >= WIDTH) {
-                    ball.x = WIDTH - BALL_RADIUS;
+                } else if (ball.x + r >= WIDTH) {
+                    ball.x = WIDTH - r;
                     ball.vx = -Math.abs(ball.vx);
                     hit = true;
                 }
                 
-                if (ball.y - BALL_RADIUS <= 0) {
-                    ball.y = BALL_RADIUS;
+                if (ball.y - r <= 0) {
+                    ball.y = r;
                     ball.vy = Math.abs(ball.vy);
                     hit = true;
-                } else if (ball.y + BALL_RADIUS >= HEIGHT) {
-                    ball.y = HEIGHT - BALL_RADIUS;
+                } else if (ball.y + r >= HEIGHT) {
+                    ball.y = HEIGHT - r;
                     ball.vy = -Math.abs(ball.vy);
                     hit = true;
                 }
                 
                 if (hit) {
-                    const files = ball.chooseNoteForHit(scaleNotes, characteristicNotes, dissonantChords, ball.octave, ball.harmonic,  false);
+                    const files = ball.chooseNoteForHit(scaleNotes, characteristicNotes, dissonantChords, ball.octave, ball.harmonic, false);
                     for (let f of files) {
                         if (f) playWavAsync(f, ball.harmonic);
                     }
                 }
                 
-                // Ball-ball collisions
                 for (let j = i + 1; j < balls.length; j++) {
                     const other = balls[j];
+                    const r1 = ball.radius;
+                    const r2 = other.radius;
                     const dx = other.x - ball.x;
                     const dy = other.y - ball.y;
                     const dist = Math.sqrt(dx*dx + dy*dy);
                     
-                    if (dist < 2 * BALL_RADIUS && dist > 0.001) {
+                    if (dist < (r1 + r2) && dist > 0.001) {
                         const nx = dx / dist;
                         const ny = dy / dist;
                         
@@ -1144,7 +1151,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             other.vx = v1n * nx + v2t;
                             other.vy = v1n * ny + (other.vy - v2n * ny);
                             
-                            const overlap = 2 * BALL_RADIUS - dist;
+                            const overlap = (r1 + r2) - dist;
                             ball.x -= nx * overlap / 2;
                             ball.y -= ny * overlap / 2;
                             other.x += nx * overlap / 2;
@@ -1165,7 +1172,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             for (let ball of balls) {
                 ctx.beginPath();
-                ctx.arc(ball.x, ball.y, BALL_RADIUS, 0, 2 * Math.PI);
+                ctx.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
                 ctx.fillStyle = ball.color;
                 ctx.fill();
                 ctx.strokeStyle = 'black';
@@ -1190,15 +1197,6 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCharacteristicNotes();
             updateDissonantChords();
             
-            const r = BALL_RADIUS;
-            
-            function randPos() {
-                return {
-                    x: Math.random() * (WIDTH - 2 * r) + r,
-                    y: Math.random() * (HEIGHT - 2 * r) + r
-                };
-            }
-            
             balls = [];
             const numBalls = parseInt(ballsSelect.value);
             
@@ -1207,16 +1205,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 const speed = parseFloat(melodySpeed.value);
                 const vx = Math.cos(angle) * speed;
                 const vy = Math.sin(angle) * speed;
+                const octaveVal = OCTAVE_SELECTION[n % OCTAVE_SELECTION.length];
+                const harmonicFlag = HARMONIC_BALLS[n % HARMONIC_BALLS.length];
+                const ballRadius = getRadiusForBall(octaveVal, harmonicFlag);
                 
                 let attempts = 0;
                 const color = BALL_COLOURS[n % BALL_COLOURS.length];
                 
                 while (attempts < 50) {
-                    const pos = randPos();
+                    const xPos = Math.random() * (WIDTH - 2 * ballRadius) + ballRadius;
+                    const yPos = Math.random() * (HEIGHT - 2 * ballRadius) + ballRadius;
                     let overlap = false;
                     
                     for (let m = 0; m < balls.length; m++) {
-                        if (Math.hypot(pos.x - balls[m].x, pos.y - balls[m].y) < 2 * r) {
+                        const otherR = balls[m].radius;
+                        if (Math.hypot(xPos - balls[m].x, yPos - balls[m].y) < (ballRadius + otherR)) {
                             overlap = true;
                             break;
                         }
@@ -1224,9 +1227,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     if (!overlap) {
                         balls.push(new Ball(
-                            pos.x, pos.y, vx, vy, color, 
-                            OCTAVE_SELECTION[n % OCTAVE_SELECTION.length], 
-                            HARMONIC_BALLS[n % HARMONIC_BALLS.length]
+                            xPos, yPos, vx, vy, color, 
+                            octaveVal, harmonicFlag, ballRadius
                         ));
                         break;
                     }
@@ -1261,19 +1263,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+        function updateIndividualSizesAndReball() {
+            document.getElementById('bass-size-value').textContent = parseFloat(bassSizeSlider.value).toFixed(2) + 'x';
+            document.getElementById('melody-size-value').textContent = parseFloat(melodySizeSlider.value).toFixed(2) + 'x';
+            document.getElementById('harmonics-size-value').textContent = parseFloat(harmonicsSizeSlider.value).toFixed(2) + 'x';
+            if (running && balls.length) {
+                for (let ball of balls) {
+                    const newRadius = getRadiusForBall(ball.octave, ball.harmonic);
+                    // adjust position to stay inside canvas if needed
+                    ball.radius = newRadius;
+                    ball.x = Math.max(ball.radius, Math.min(WIDTH - ball.radius, ball.x));
+                    ball.y = Math.max(ball.radius, Math.min(HEIGHT - ball.radius, ball.y));
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', loadPresets);
         keySelect.addEventListener('change', updateScale);
         scaleSelect.addEventListener('change', updateScale);
         
-        sizeSlider.addEventListener('input', function() {
-            document.getElementById('size-value').textContent = this.value + 'x';
-            updateBallSize();
-        });
-        
-        sizeSlider.addEventListener('volumeSlider', function() {
-            document.getElementById('size-value').textContent = this.value + 'x';
-            setVolume(this.value);
-        });
+        bassSizeSlider.addEventListener('input', updateIndividualSizesAndReball);
+        melodySizeSlider.addEventListener('input', updateIndividualSizesAndReball);
+        harmonicsSizeSlider.addEventListener('input', updateIndividualSizesAndReball);
 
         melodySpeed.addEventListener('input', function() {
             document.getElementById('melody-value').textContent = this.value;
