@@ -42,6 +42,25 @@
       "reverb-amount": "0.5",
       "timer-minutes": "30"
     },
+    "Bladerunner": {
+      "balls-select": "3",
+      "folder-select": "pad2",
+      "bg-select": "rain.wav",
+      "volume": "0.25",
+      "key-select": "C",
+      "scale-select": "Minor",
+      "bass-volume": "1",
+      "melody-volume": "1",
+      "harmonics-volume": "0.8",
+      "bass-size-slider": "1",
+      "melody-size-slider": "1",
+      "harmonics-size-slider": "0.5",
+      "bass-speed": "20",
+      "melody-speed": "20",
+      "harmonics-speed": "10",
+      "reverb-amount": "0.2",
+      "timer-minutes": "30"
+    },
     "Classic": {
       "balls-select": "3",
       "folder-select": "piano",
