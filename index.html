@@ -300,7 +300,23 @@
                     <span class="slider-label" id="reverb-value">0.10</span>
                 </div>
             </div>
-            
+            <div class="size-group">
+                <div class="size-item">
+                    <label>🔵 Bass Volume:</label>
+                    <input type="range" id="bass-volume" min="0.0" max="1" step="0.01" value="0.5">
+                    <span class="slider-label" id="bass-volume-value"></span>
+                </div>
+                <div class="size-item">
+                    <label>🟢 Melody Volume:</label>
+                    <input type="range" id="melody-volume" min="0.0" max="1" step="0.01" value="0.5">
+                    <span class="slider-label" id="melody-volume-value"></span>
+                </div>
+                <div class="size-item">
+                    <label>🟣 Harmonics Volume:</label>
+                    <input type="range" id="harmonics-volume" min="0.0" max="1" step="0.01" value="0.5">
+                    <span class="slider-label" id="harmonics-volume-value">1.0x</span>
+                </div>
+            </div>
             <div class="size-group">
                 <div class="size-item">
                     <label>🔵 Bass Size:</label>
@@ -350,10 +366,11 @@
         const HEIGHT = WIDTH/2;
         const BASE_BALL_RADIUS = 26;
         const BALL_COLOURS = ['lightblue', 'palegreen', 'lightpink', 'greenyellow', 'pink', 'lightgreen','palevioletred', 'mediumspringgreen', 'mistyrose', 'lightskyblue'];
-        const BACKGROUND_COLOURS = ['black', 'bisque', 'green', 'firebrick', 'midnightblue', 'blue', 'lightslategray', 'aqua', 'skyblue', 'dimgrey', 'darkslategray'];
+        const BACKGROUND_COLOURS = ['black', 'bisque', 'green', 'firebrick', 'midnightblue', 'blue', 'lightslategray', 'aqua', 'skyblue', 'lightslategray','dimgrey', 'darkslategray'];
         const OCTAVE_SELECTION = [3,4,6,4,7,5,7,5,7,3];
         const HARMONIC_BALLS = [false, false, true, false, true, false, true, false, true, false];
         const BASS_OCTAVE = 3;
+        const HARMONICS_OCTAVE = 6; //or above
         const CHROMATIC = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
         const SCALES = {
             "Major": [0,2,4,5,7,9,11],
@@ -538,7 +555,13 @@
         const statusEl = document.getElementById('status');
         const volumeSlider = document.getElementById('volume');
         const reverbAmount = document.getElementById('reverb-amount');
+        const bassVolume = document.getElementById('bass-volume');
+        const melodyVolume = document.getElementById('melody-volume');
+        const harmonicsVolume = document.getElementById('harmonics-volume');
         
+        document.getElementById('bass-volume-value').textContent = bassVolume.value;
+        document.getElementById('melody-volume-value').textContent = melodyVolume.value;
+        document.getElementById('harmonics-volume-value').textContent = harmonicsVolume.value
         document.getElementById('bass-size-value').textContent = bassSizeSlider.value + 'x';
         document.getElementById('melody-size-value').textContent = melodySizeSlider.value + 'x';
         document.getElementById('harmonics-size-value').textContent = harmonicsSizeSlider.value + 'x';
@@ -861,7 +884,7 @@
             statusEl.textContent = `Loaded ${Object.keys(window.noteFiles).length} notes`;
         }
 
-        async function playWavAsync(path, isHarmonic, applyReverb = true,) {
+        async function playWavAsync(path, noteOctave, applyReverb = true,) {
             if (!path) return;
             
             try {
@@ -887,8 +910,15 @@
                 const gainNode = audioContext.createGain();
                 gainNode.gain.value = Math.random() * 0.5 + 0.5;
 
-                if (isHarmonic){
+                if (noteOctave>=HARMONICS_OCTAVE) {
                     gainNode.gain.value *= 0.4;
+                    gainNode.gain.value *= parseFloat(harmonicsVolume.value);
+                }
+                else if (noteOctave === BASS_OCTAVE) {
+                    gainNode.gain.value *= parseFloat(bassVolume.value);
+                }
+                else {
+                    gainNode.gain.value *= parseFloat(melodyVolume.value);
                 }
                 
                 if (applyReverb && reverbConvolver) {
@@ -1123,7 +1153,7 @@
                 if (hit) {
                     const files = ball.chooseNoteForHit(scaleNotes, characteristicNotes, dissonantChords, ball.octave, ball.harmonic, false);
                     for (let f of files) {
-                        if (f) playWavAsync(f, ball.harmonic);
+                        if (f) playWavAsync(f, ball.octave, true);
                     }
                 }
                 
@@ -1160,7 +1190,7 @@
                              for (let b of [ball, other]) {
                                 const files = b.chooseNoteForHit(scaleNotes, characteristicNotes, dissonantChords, b.octave, b.harmonic, true);
                                 for (let f of files) {
-                                    if (f) playWavAsync(f, b.harmonic);
+                                    if (f) playWavAsync(f, b.octave, true);
                                 }
                             }
                         }
@@ -1282,6 +1312,16 @@
         keySelect.addEventListener('change', updateScale);
         scaleSelect.addEventListener('change', updateScale);
         
+        bassVolume.addEventListener('input', function() {
+            document.getElementById('bass-volume-value').textContent = this.value;
+        });
+        melodyVolume.addEventListener('input', function() {
+            document.getElementById('melody-volume-value').textContent = this.value;
+        });
+        harmonicsVolume.addEventListener('input', function() {
+            document.getElementById('harmonics-volume-value').textContent = this.value;
+        });
+
         bassSizeSlider.addEventListener('input', updateIndividualSizesAndReball);
         melodySizeSlider.addEventListener('input', updateIndividualSizesAndReball);
         harmonicsSizeSlider.addEventListener('input', updateIndividualSizesAndReball);
