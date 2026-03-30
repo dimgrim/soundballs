@@ -4,7 +4,7 @@
     "harp",
     "kalimba",
     "pad",
-    "pad2",
+    "pad 2",
     "piano",
     "rhodes"
   ],
@@ -249,7 +249,7 @@
       "Gb4.wav",
       "Gb6.wav"
     ],
-    "pad2": [
+    "pad 2": [
       "A3.wav",
       "A6.wav",
       "Ab3.wav",

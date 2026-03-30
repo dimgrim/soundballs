@@ -461,14 +461,6 @@
         content.classList.toggle('collapsed');
         arrow.classList.toggle('collapsed');
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-    const content = document.getElementById('settings-content');
-    const arrow = document.querySelector('.settings-arrow');
-    
-    content.classList.add('collapsed');
-    arrow.classList.add('collapsed');
-});
     
         async function loadPresets() {
             const response = await fetch('presets.json');
