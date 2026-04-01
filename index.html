@@ -3,358 +3,514 @@
 <head>
     <link rel="shortcut icon" href="favicon.ico">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Soundballs</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            background-color: #333;
-            color: white;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #0a0c10;
+            color: #eef2ff;
         }
-        #container {
-            max-width: 75%;
-            margin: 0 auto;
+
+
+/* Add media query for very large screens */
+@media (min-width: 1600px) {
+    #container {
+        width: 85%;
+        max-width: 1600px;
+    }
+}
+
+/* For medium screens */
+@media (max-width: 1200px) {
+    #container {
+        width: 92%;
+        padding: 1rem 1.5rem 1.5rem;
+    }
+}
+
+/* For smaller screens */
+@media (max-width: 780px) {
+    #container {
+        width: 95%;
+        padding: 1rem;
+    }
+}
+        .canvas-wrapper {
+            background: #000000;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            margin-bottom: 1.25rem;
+            transition: box-shadow 0.2s ease;
         }
+
         canvas {
             width: 100%;
             height: auto;
-            max-width: 100%;
             display: block;
-            border: 0px solid #777;
             background-color: black;
+            cursor: pointer;
         }
-        .controls {
-            background-color: #444;
-            padding: 10px;
-            margin-top: 10px;
+
+        .top-bar {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
             align-items: center;
-            border-radius: 5px;
-            justify-content: center;
+            gap: 1rem;
+            background: rgba(18, 22, 28, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 60px;
+            padding: 0.6rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
-        .slider-style {
+
+        .brand {
+            font-weight: 700;
+            font-size: 1.35rem;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #f0a3d0, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-right: 0.5rem;
+        }
+
+        .preset-area {
             display: flex;
             align-items: center;
-            gap: 5px;
-            background-color: #555;
-            padding: 5px 10px;
-            border-radius: 3px;
-            font-size: 12px;
-            overflow: hidden;
-            margin-bottom: 5px;
+            gap: 0.6rem;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.25rem 1rem;
+            border-radius: 40px;
         }
-        .timer-style {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background-color: #555;
-            padding: 5px 10px;
-            border-radius: 3px;
-            font-size: 12px;
-            overflow: hidden;
+
+        .preset-area span {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #b9c3d4;
         }
+
         select, button {
-            padding: 5px;
-            border-radius: 3px;
-            border: 1px solid #666;
-            background-color: #666;
+            font-family: inherit;
+            background: #1e293b;
+            border: 1px solid #334155;
             color: white;
+            padding: 0.45rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
             cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
         }
+
         select:hover, button:hover {
-            background-color: #777;
+            background: #2d3a4e;
+            border-color: #5b6e8c;
+            transform: translateY(-1px);
         }
-        input[type=range] {
-            width: 80px;
-        }
-        label {
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .slider-label {
-            display: none;
-            font-size: 11px;
-            color: #ccc;
-        }
+
         button {
-            background-color: #ff69b4;
+            background: linear-gradient(135deg, #db2777, #c026d3);
             border: none;
-            padding: 8px 15px;
-            font-weight: bold;
+            padding: 0.45rem 1.4rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 8px rgba(219, 39, 119, 0.2);
         }
+
         button:hover {
-            background-color: #ff85c0;;
+            background: linear-gradient(135deg, #ec489a, #d946ef);
+            box-shadow: 0 4px 12px rgba(219, 39, 119, 0.3);
+            transform: translateY(-1px);
         }
-        #status {
-            color: #999;
-            font-size: 12px;
-            margin-left: 10px;
-        }
-        footer {
-            text-align: center;
-            padding: 10px;
-            color: #aaa;
-            margin-top: 20px;
-            font-size: 11px;
-        }
-        settings-toggle {
-            background-color: #2c3e50;
-            padding: 8px 15px;
-            cursor: pointer;
-            border-radius: 3px;
-            margin-bottom: 10px;
+
+        .timer-card {
             display: flex;
-            justify-content: left;
             align-items: center;
-            user-select: none;
-            transition: background 0.2s;
-            font-weight: bold;
-            width: 100%;
+            gap: 0.5rem;
+            background: #11161e;
+            padding: 0.3rem 1rem;
+            border-radius: 48px;
+            border: 1px solid #2a3442;
         }
+
+        .timer-card label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #9aaec9;
+        }
+
+        .timer-card input {
+            background: #0a0f14;
+            border: 1px solid #2a3442;
+            color: white;
+            border-radius: 28px;
+            padding: 0.3rem 0.5rem;
+            width: 48px;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        #timer-display {
+            font-family: 'JetBrains Mono', monospace;
+            background: #00000055;
+            padding: 0.25rem 0.8rem;
+            border-radius: 32px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: #f0e6ff;
+        }
+
+        .about-link {
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.05);
+            transition: 0.2s;
+        }
+
+        .about-link:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .settings-toggle {
+            background: #12171f;
+            border-radius: 60px;
+            padding: 0.5rem 1.2rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            margin-bottom: 0.75rem;
+            width: fit-content;
+            border: 1px solid #2a3442;
+        }
+
         .settings-toggle:hover {
-            background-color: #34495e;
+            background: #1e293b;
+            border-color: #5b6e8c;
         }
-        .settings-label {
-            font-weight: bold;
-            font-size: 12px;
-        }
+
         .settings-arrow {
-            transition: transform 0.3s ease;
-            font-size: 12px;
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            font-size: 0.7rem;
         }
+
         .settings-arrow.collapsed {
             transform: rotate(-90deg);
         }
+
         .settings-content {
             max-height: 2000px;
             overflow: hidden;
-            transition: max-height 0.4s ease-out;
+            transition: max-height 0.45s ease-out;
         }
+
         .settings-content.collapsed {
             max-height: 0;
         }
+
         .size-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            background-color: #3a3a3a;
-            padding: 5px 8px;
-            border-radius: 5px;
-            margin-bottom: 5px;
+            gap: 1rem;
+            background: rgba(15, 20, 27, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 1rem 1.2rem;
+            border-radius: 28px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
+
         .size-item {
             display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 3px 8px;
-            border-radius: 20px;
-            font-size: 11px;
+            gap: 0.7rem;
+            background: #0f131c;
+            padding: 0.4rem 1rem;
+            border-radius: 48px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            backdrop-filter: blur(2px);
+            border: 1px solid #232e3c;
         }
+
+        .size-item span[id$="-value"] {
+            display: none;
+        }
+        
         .size-item label {
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #b9c8ff;
         }
-        .size-item input {
-            width: 70px;
+
+        .size-item select, .size-item input[type="range"] {
+            background: #0a0f16;
+            border: 1px solid #2d3a48;
+            padding: 0.25rem 0.6rem;
+            font-size: 0.75rem;
         }
+
+        input[type="range"] {
+            width: 110px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #2d3a48;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        input[type="range"]:focus {
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #ec489a;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 6px #f0a3d0;
+            border: none;
+        }
+
         .size-item span {
-            min-width: 32px;
+            min-width: 38px;
             text-align: center;
             font-family: monospace;
+            font-size: 0.7rem;
+            background: #03060b;
+            padding: 0.2rem 0.5rem;
+            border-radius: 24px;
+            color: #ccddf8;
+        }
+
+        #status {
+            font-size: 0.7rem;
+            color: #6c86a3;
+            margin-left: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem 0.5rem;
+            color: #5d6f8f;
+            font-size: 0.7rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 2rem;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-card {
+            background: #141b24;
+            border-radius: 32px;
+            max-width: 500px;
+            width: 90%;
+            padding: 1.8rem;
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 25px 45px -12px black;
+        }
+
+        .modal-card h2 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            background: linear-gradient(120deg, #f0a3d0, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .modal-card p {
+            color: #cad2e6;
+            line-height: 1.5;
+        }
+
+        .coming-list {
+            list-style: none;
+            padding: 0;
+        }
+        .coming-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #2a3a48;
+            color: #b9d0f0;
+        }
+
+        .close-modal {
+            background: #2c3e50;
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+        }
+
+        @media (max-width: 780px) {
+            #container {
+                padding: 1rem;
+            }
+            .size-item {
+                flex-wrap: wrap;
+                gap: 0.4rem;
+            }
+            .top-bar {
+                border-radius: 28px;
+                padding: 0.8rem 1rem;
+            }
         }
     </style>
 </head>
 <body>
     <div id="container">
-        <div style="display:flex; background-color: #444; padding: 8px 15px; margin-bottom: 10px; border-radius: 5px; align-items: center; gap: 20px; font-size: 13px; flex-wrap: wrap;">
-            <span style="font-weight: 600; color:#ff69b4 ;">Soundballs</span>
-            <div style="display: flex; align-items: center; gap: 2px;">
-                <span style="font-weight: 600; color:white;">Preset:</span>                
-                <select id="preset-select" style="background-color: #666; color: white; border: none; padding: 4px 8px; border-radius: 3px;"></select>
+        <div class="top-bar">
+            <span class="brand">Soundballs</span>
+            <div class="preset-area">
+                <span>Preset:</span>
+                <select id="preset-select" style="background:#0f141c;"></select>
             </div>
-            <span id="about-link" style="font-weight: 600; color:white; cursor: pointer;" >About</span>
-
-
-            <div style="flex: 1;"></div>
-                    <div class="timer-style">
-                    <label>Timer:</label>
-                        <div style="display: flex; gap: 10px; align-items: center;">
-                            <input type="number" id="timer-hours" min="0" max="24" step="1" value="0" style="width: 40px;">
-                            <span>h</span>
-                            <input type="number" id="timer-minutes" min="0" max="59" step="1" value="30" style="width: 40px;">
-                            <span>m</span>
-                            <span id="timer-display" style="margin-left: 10px; font-family: monospace; font-size: 1.0em;">00:00:00</span>
-                        </div>
-                    </div>
-                    <button id="start-btn">Start</button>
-                    <button id="stop-btn">Stop</button>
+            <div class="about-link" id="about-link">About</div>
+            <div style="flex:1"></div>
+            <div class="timer-card">
+                <label>Timer</label>
+                <input type="number" id="timer-hours" min="0" max="24" step="1" value="0" style="width: 60px;">
+                <span>h</span>
+                <input type="number" id="timer-minutes" min="0" max="59" step="1" value="30" style="width: 60px;">
+                <span>m</span>
+                <span id="timer-display">00:00:00</span>
+            </div>
+            <button id="start-btn">▶ Start</button>
+            <button id="stop-btn">■ Stop</button>
         </div>
-        <div id="about-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
-            <div style="background-color: #444; padding: 30px; border-radius: 8px; max-width: 500px; width: 90%; margin: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); border: 1px solid #666;">
-                <h2 style="margin-top: 0; color: #fff; font-size: 18px; border-bottom: 1px solid #666; padding-bottom: 10px;">About Soundballs</h2>
-                <p style="color: #ddd; line-height: 1.6; margin: 15px 0;">Welcome to <strong>Soundballs</strong> — an experimental audio-visual playground where music and motion collide!</p>
-                
-                <p style="color: #ddd; line-height: 1.6; margin: 15px 0;">This is an interactive webpage that combines visuals with music theory to generate music through bouncing balls. Each ball triggers different notes based on collisions, creating unique melodic patterns every time. The soundscapes created are suitable for focus/sleep/relaxation.</p>
-                
-                <h3 style="color: #fff; margin: 20px 0 10px;">🚀 Coming Soon:</h3>
-                <ul style="list-style: none; padding: 0;">
-                    <li style="padding: 8px 0; color: #ccc; border-bottom: 1px solid #555;">🎵 New instrument sounds</li>
-                    <li style="padding: 8px 0; color: #ccc; border-bottom: 1px solid #555;">🎵 Ambient background soundscapes</li>
-                    <li style="padding: 8px 0; color: #ccc; border-bottom: 1px solid #555;">🎵 More visual effects and color themes</li>
-                    <li style="padding: 8px 0; color: #ccc; border-bottom: 1px solid #555;">🎵 Apply cool presets and save your own combinations</li>
+
+        <div id="about-modal" class="modal-overlay">
+            <div class="modal-card">
+                <h2>Soundballs</h2>
+                <p>Where bouncing circles meet generative music — an evolving audiovisual instrument.</p>
+                <p>Each collision triggers melodic fragments based on selected keys and scales. Perfect for focus, meditation, or creative flow.</p>
+                <h3 style="margin: 1rem 0 0.5rem;">Coming soon:</h3>
+                <ul class="coming-list">
+                    <li>New organic instrument packs</li>
+                    <li>Ambient texture layers</li>
+                    <li>Dynamic color moods & visualizers</li>
+                    <li>Save custom presets</li>
                 </ul>
-                <p style="font-style: italic; color: #aaa; margin-top: 20px;">Sound Balls is constantly evolving. Check back for updates and new features!</p>
-                
-                <button id="close-about" style="background-color: #2c3e50; color: white; border: none; padding: 10px 25px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-top: 15px;">Got it</button>
+                <button id="close-about" class="close-modal">Close</button>
             </div>
         </div>
 
-        <canvas id="canvas" width=1200 height=600></canvas>
-        
-    <div class="controls" >
+        <div class="canvas-wrapper">
+            <canvas id="canvas" width="1200" height="600"></canvas>
+        </div>
 
-    <div class="settings-toggle" onclick="toggleSettings()">
-        <span class="settings-label">⚙️ Settings</span>
-        <span class="settings-arrow">▼</span>
-    </div>
-    <div id="settings-content" class="settings-content">
-        <div class="size-group">
-                <div class="size-item">
-                    <label>Balls:</label>
-                    <select id="balls-select">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3" selected>3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                    </select>
-                </div>
-
-                <div class="size-item">
-                    <label>Instrument:</label>
-                    <select id="folder-select">
-                        <option value="">Loading...</option>
-                    </select>
-                </div>
-
-                <div class="size-item">
-                    <label>Background:</label>
-                    <select id="bg-select">
-                        <option value="(none)" selected>(none)</option>
-                    </select>
-                </div>
-                
-                <div class="size-item">
+        <div class="controls" style="background: transparent; padding: 0; margin-top: 0.5rem;">
+            <div class="settings-toggle" onclick="toggleSettings()">
+                <span class="settings-label">Settings</span>
+                <span class="settings-arrow">▼</span>
+            </div>
+            <div id="settings-content" class="settings-content">
+                <!-- row 1 -->
+                <div class="size-group">
+                    <div class="size-item">
+                        <label>Balls</label>
+                        <select id="balls-select">
+                            <option value="1">1</option><option value="2">2</option><option value="3" selected>3</option>
+                            <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                            <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                        </select>
+                    </div>
+                    <div class="size-item">
+                        <label>Instrument</label>
+                        <select id="folder-select"><option>Loading...</option></select>
+                    </div>
+                    <div class="size-item">
+                        <label>Background</label>
+                        <select id="bg-select"><option value="(none)" selected>(none)</option></select>
+                    </div>
+                    <div class="size-item">
                         <label>Instrument</label>
                         <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
                         <label>Background</label>
-                </div>
-            </div>
-            <div class = size-group>
-                <div class="size-item">
-                    <label>Key:</label>
-                    <select id="key-select">
-                        <option value="C" selected>C</option>
-                        <option value="Db">Db</option>
-                        <option value="D">D</option>
-                        <option value="Eb">Eb</option>
-                        <option value="E">E</option>
-                        <option value="F">F</option>
-                        <option value="Gb">Gb</option>
-                        <option value="G">G</option>
-                        <option value="Ab">Ab</option>
-                        <option value="A">A</option>
-                        <option value="Bb">Bb</option>
-                        <option value="B">B</option>
-                    </select>
-                </div>
-                <div class="size-item">
-                    <label>Style:</label>
-                    <select id="scale-select">
-                        <option value="Major" selected>Joyful</option>
-                        <option value="Minor">Melancholic</option>
-                        <option value="Dorian">Smooth</option>
-                        <option value="Phrygian">Mysterious</option>
-                        <option value="Lydian">Dreamy</option>
-                        <option value="Mixolydian">Brave</option>
-                        <option value="Locrian">Dissonant</option>
-                        <option value="Harmonic Minor">Dramatic</option>
-                        <option value="Minor Pentatonic">Soulful</option>
-                        <option value="Blues">Bluesy</option>
-                        <option value="Melodic Minor">Jazzy</option>
-                        <option value="Pentatonic">Basic</option>
-                        <option value="Chromatic">Random</option>
-                    </select>
-                </div>
-                <div class="size-item">
-                    <label>Reverb:</label>
-                    <input type="range" id="reverb-amount" min="0" max="1" step="0.01" value="0.10">
-                    <span class="slider-label" id="reverb-value">0.10</span>
-                </div>
-            </div>
-            <div class="size-group">
-                <div class="size-item">
-                    <label>🔵 Bass Volume:</label>
-                    <input type="range" id="bass-volume" min="0.0" max="1" step="0.01" value="0.5">
-                    <span class="slider-label" id="bass-volume-value"></span>
-                </div>
-                <div class="size-item">
-                    <label>🟢 Melody Volume:</label>
-                    <input type="range" id="melody-volume" min="0.0" max="1" step="0.01" value="0.5">
-                    <span class="slider-label" id="melody-volume-value"></span>
-                </div>
-                <div class="size-item">
-                    <label>🟣 Harmonics Volume:</label>
-                    <input type="range" id="harmonics-volume" min="0.0" max="1" step="0.01" value="0.5">
-                    <span class="slider-label" id="harmonics-volume-value">1.0x</span>
-                </div>
-            </div>
-            <div class="size-group">
-                <div class="size-item">
-                    <label>🔵 Bass Size:</label>
-                    <input type="range" id="bass-size-slider" min="0.5" max="2" step="0.01" value="1">
-                    <span class="slider-label" id="bass-size-value">1.0x</span>
-                </div>
-                <div class="size-item">
-                    <label>🟢 Melody Size:</label>
-                    <input type="range" id="melody-size-slider" min="0.5" max="2" step="0.01" value="1">
-                    <span class="slider-label" id="melody-size-value">1.0x</span>
-                </div>
-                <div class="size-item">
-                    <label>🟣 Harmonics Size:</label>
-                    <input type="range" id="harmonics-size-slider" min="0.5" max="2" step="0.01" value="1">
-                    <span class="slider-label" id="harmonics-size-value">1.0x</span>
-                </div>
-            </div>
-            <div class = "size-group">
-                <div class="size-item">
-                    <label>🔵 Bass Speed:</label>
-                    <input type="range" id="bass-speed" min="0" max="100" step="1" value="25">
-                    <span class="slider-label" id="bass-value">25</span>
-                </div>
-                <div class="size-item">
-                    <label>🟢 Melody Speed:</label>
-                    <input type="range" id="melody-speed" min="0" max="100" step="1" value="50">
-                    <span class="slider-label" id="melody-value">50</span>
-                </div>
-                <div class="size-item">
-                    <label>🟣 Harmonics Speed:</label>
-                    <input type="range" id="harmonics-speed" min="0" max="100" step="1" value="12">
-                    <span class="slider-label" id="harmonics-value">12</span>
-                </div>
-            </div>
 
-            
-
-            <span id="status"></span>
-        </div>
+                    </div>
+                </div>
+                <!-- row 2 -->
+                <div class="size-group">
+                    <div class="size-item">
+                        <label>Key</label>
+                        <select id="key-select">
+                            <option>C</option><option>Db</option><option>D</option><option>Eb</option><option>E</option>
+                            <option>F</option><option>Gb</option><option>G</option><option>Ab</option><option>A</option>
+                            <option>Bb</option><option>B</option>
+                        </select>
+                    </div>
+                    <div class="size-item">
+                        <label>Mood</label>
+                        <select id="scale-select">
+                            <option value="Major" selected>Joyful</option><option value="Minor">Melancholic</option>
+                            <option value="Dorian">Smooth</option><option value="Phrygian">Mysterious</option>
+                            <option value="Lydian">Dreamy</option><option value="Mixolydian">Brave</option>
+                            <option value="Locrian">Dissonant</option><option value="Harmonic Minor">Dramatic</option>
+                            <option value="Minor Pentatonic">Soulful</option><option value="Blues">Bluesy</option>
+                            <option value="Melodic Minor">Jazzy</option><option value="Pentatonic">Basic</option>
+                            <option value="Chromatic">Random</option>
+                        </select>
+                    </div>
+                    <div class="size-item">
+                        <label>Reverb</label>
+                        <input type="range" id="reverb-amount" min="0" max="1" step="0.01" value="0.10">
+                        <span id="reverb-value">0.10</span>
+                    </div>
+                </div>
+                <!-- volumes group -->
+                <div class="size-group">
+                    <div class="size-item"><label>🔵 Bass vol</label><input type="range" id="bass-volume" min="0" max="1" step="0.01" value="0.5"><span id="bass-volume-value">0.5</span></div>
+                    <div class="size-item"><label>🟢 Melody vol</label><input type="range" id="melody-volume" min="0" max="1" step="0.01" value="0.5"><span id="melody-volume-value">0.5</span></div>
+                    <div class="size-item"><label>🟣 Harmonics vol</label><input type="range" id="harmonics-volume" min="0" max="1" step="0.01" value="0.5"><span id="harmonics-volume-value">0.5</span></div>
+                </div>
+                <!-- size multipliers -->
+                <div class="size-group">
+                    <div class="size-item"><label>🔵 Bass size</label><input type="range" id="bass-size-slider" min="0.5" max="2" step="0.01" value="1"><span id="bass-size-value">1.0x</span></div>
+                    <div class="size-item"><label>🟢 Melody size</label><input type="range" id="melody-size-slider" min="0.5" max="2" step="0.01" value="1"><span id="melody-size-value">1.0x</span></div>
+                    <div class="size-item"><label>🟣 Harmonics size</label><input type="range" id="harmonics-size-slider" min="0.5" max="2" step="0.01" value="1"><span id="harmonics-size-value">1.0x</span></div>
+                </div>
+                <!-- speed sliders -->
+                <div class="size-group">
+                    <div class="size-item"><label>🔵 Bass speed</label><input type="range" id="bass-speed" min="0" max="100" step="1" value="25"><span id="bass-value">25</span></div>
+                    <div class="size-item"><label>🟢 Melody speed</label><input type="range" id="melody-speed" min="0" max="100" step="1" value="50"><span id="melody-value">50</span></div>
+                    <div class="size-item"><label>🟣 Harmonics speed</label><input type="range" id="harmonics-speed" min="0" max="100" step="1" value="12"><span id="harmonics-value">12</span></div>
+                </div>
+                <span id="status" style="display:inline-block; margin: 0 0 0.5rem 1rem;"></span>
+            </div>
         </div>
     </div>
 
@@ -365,7 +521,7 @@
         const HEIGHT = WIDTH/2;
         const BASE_BALL_RADIUS = 26;
         const BALL_COLOURS = ['lightblue', 'palegreen', 'lightpink', 'greenyellow', 'pink', 'lightgreen','palevioletred', 'mediumspringgreen', 'mistyrose', 'lightskyblue'];
-        const BACKGROUND_COLOURS = ['black', 'bisque', 'green', 'firebrick', 'midnightblue', 'blue', 'lightslategray', 'aqua', 'skyblue', 'lightslategray','dimgrey', 'darkslategray'];
+        const BACKGROUND_COLOURS = ['black', 'bisque', 'green', 'orange', 'midnightblue', 'blue', 'lightslategray', 'aqua', 'skyblue', 'lightslategray','dimgrey', 'darkslategray'];
         const OCTAVE_SELECTION = [3,4,6,4,7,5,7,5,7,3];
         const HARMONIC_BALLS = [false, false, true, false, true, false, true, false, true, false];
         const BASS_OCTAVE = 3;
