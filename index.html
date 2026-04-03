@@ -605,9 +605,9 @@
         arrow.classList.toggle('collapsed');
     }
     
-         // ---------- PERSISTENCE (no compression, full functionality) ----------
         function saveAllSettings() {
             const settingsMap = {
+                'preset-select': document.getElementById('preset-select').value,
                 'balls-select': document.getElementById('balls-select').value,
                 'bg-select': document.getElementById('bg-select').value,
                 'volume': document.getElementById('volume').value,
