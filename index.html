@@ -549,10 +549,10 @@
             "Minor Pentatonic": [],  
             "Blues": [4],          
             "Dorian": [10],       
-            "Phrygian": [1, 8],    
+            "Phrygian": [8],    
             "Lydian": [11],      
             "Mixolydian": [10],   
-            "Locrian": [1, 8],   
+            "Locrian": [10],   
             "Harmonic Minor": [8],
             "Melodic Minor": [], 
             "Chromatic": [],  
@@ -576,7 +576,6 @@
         let dissonantChords = [];
         let bgSource = null;
         let bgStop = false;
-        // per-type instrument folders: bass, melody, harmonics
         let currentBassFolder = DEFAULT_NOTE_FOLDER_NAME;
         let currentMelodyFolder = DEFAULT_NOTE_FOLDER_NAME;
         let currentHarmonicsFolder = DEFAULT_NOTE_FOLDER_NAME;
@@ -1080,7 +1079,7 @@
                     }
                 }
                 
-                statusEl.textContent = `Loaded ${noteFolders.length} folders, ${Object.keys(backgroundFiles).length} backgrounds`;
+                statusEl.textContent = `sounds loaded.`;
                 
             } catch (error) {
                 console.error('Error loading directory:', error);
