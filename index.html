@@ -605,6 +605,106 @@
         arrow.classList.toggle('collapsed');
     }
     
+         // ---------- PERSISTENCE (no compression, full functionality) ----------
+        function saveAllSettings() {
+            const settingsMap = {
+                'balls-select': document.getElementById('balls-select').value,
+                'bg-select': document.getElementById('bg-select').value,
+                'volume': document.getElementById('volume').value,
+                'key-select': document.getElementById('key-select').value,
+                'scale-select': document.getElementById('scale-select').value,
+                'reverb-amount': document.getElementById('reverb-amount').value,
+                'bass-instrument-select': document.getElementById('bass-instrument-select').value,
+                'melody-instrument-select': document.getElementById('melody-instrument-select').value,
+                'harmonics-instrument-select': document.getElementById('harmonics-instrument-select').value,
+                'bass-volume': document.getElementById('bass-volume').value,
+                'melody-volume': document.getElementById('melody-volume').value,
+                'harmonics-volume': document.getElementById('harmonics-volume').value,
+                'bass-size-slider': document.getElementById('bass-size-slider').value,
+                'melody-size-slider': document.getElementById('melody-size-slider').value,
+                'harmonics-size-slider': document.getElementById('harmonics-size-slider').value,
+                'bass-speed': document.getElementById('bass-speed').value,
+                'melody-speed': document.getElementById('melody-speed').value,
+                'harmonics-speed': document.getElementById('harmonics-speed').value,
+                'timer-hours': document.getElementById('timer-hours').value,
+                'timer-minutes': document.getElementById('timer-minutes').value,
+                'settings-collapsed': document.getElementById('settings-content').classList.contains('collapsed') ? 'true' : 'false'
+            };
+            localStorage.setItem('soundballs_settings', JSON.stringify(settingsMap));
+        }
+
+        function loadAllSettings() {
+            const saved = localStorage.getItem('soundballs_settings');
+            if (!saved) return;
+            try {
+                const settings = JSON.parse(saved);
+                for (const [id, value] of Object.entries(settings)) {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        if (el.type === 'range' || el.tagName === 'SELECT' || el.type === 'number') {
+                            el.value = value;
+                            el.dispatchEvent(new Event('change', { bubbles: true }));
+                            if (el.type === 'range') el.dispatchEvent(new Event('input', { bubbles: true }));
+                        }
+                    }
+                }
+                if (settings['settings-collapsed'] === 'true') {
+                    const content = document.getElementById('settings-content');
+                    const arrow = document.querySelector('.settings-arrow');
+                    if (content && !content.classList.contains('collapsed')) {
+                        content.classList.add('collapsed');
+                        arrow.classList.add('collapsed');
+                    }
+                } else {
+                    const content = document.getElementById('settings-content');
+                    const arrow = document.querySelector('.settings-arrow');
+                    if (content && content.classList.contains('collapsed')) {
+                        content.classList.remove('collapsed');
+                        arrow.classList.remove('collapsed');
+                    }
+                }
+                document.getElementById('bass-volume-value').textContent = document.getElementById('bass-volume').value;
+                document.getElementById('melody-volume-value').textContent = document.getElementById('melody-volume').value;
+                document.getElementById('harmonics-volume-value').textContent = document.getElementById('harmonics-volume').value;
+                document.getElementById('bass-size-value').textContent = parseFloat(document.getElementById('bass-size-slider').value).toFixed(2) + 'x';
+                document.getElementById('melody-size-value').textContent = parseFloat(document.getElementById('melody-size-slider').value).toFixed(2) + 'x';
+                document.getElementById('harmonics-size-value').textContent = parseFloat(document.getElementById('harmonics-size-slider').value).toFixed(2) + 'x';
+                document.getElementById('melody-value').textContent = document.getElementById('melody-speed').value;
+                document.getElementById('bass-value').textContent = document.getElementById('bass-speed').value;
+                document.getElementById('harmonics-value').textContent = document.getElementById('harmonics-speed').value;
+                document.getElementById('reverb-value').textContent = document.getElementById('reverb-amount').value;
+            } catch(e) { console.warn(e); }
+        }
+
+        function attachSaveListeners() {
+            const elements = [
+                'balls-select', 'bg-select', 'volume', 'key-select', 'scale-select', 'reverb-amount',
+                'bass-instrument-select', 'melody-instrument-select', 'harmonics-instrument-select',
+                'bass-volume', 'melody-volume', 'harmonics-volume', 'bass-size-slider', 'melody-size-slider',
+                'harmonics-size-slider', 'bass-speed', 'melody-speed', 'harmonics-speed',
+                'timer-hours', 'timer-minutes'
+            ];
+            for (let id of elements) {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('change', () => saveAllSettings());
+                if (el && (el.type === 'range')) el.addEventListener('input', () => saveAllSettings());
+            }
+            const settingsToggleDiv = document.querySelector('.settings-toggle');
+            if (settingsToggleDiv) {
+                settingsToggleDiv.addEventListener('click', () => {
+                    setTimeout(() => saveAllSettings(), 50);
+                });
+            }
+        }
+
+        function toggleSettings() {
+            const content = document.getElementById('settings-content');
+            const arrow = document.querySelector('.settings-arrow');
+            content.classList.toggle('collapsed');
+            arrow.classList.toggle('collapsed');
+            saveAllSettings();
+        }
+
         async function loadPresets() {
             const response = await fetch('presets.json');
             const data = await response.json();
@@ -635,6 +735,7 @@
                     }
                     
                     if (typeof updateTimerDisplay === 'function') updateTimerDisplay();
+                    saveAllSettings();
                 }
                 stop();
                 start();
@@ -989,6 +1090,11 @@
             await loadNoteFilesForType(currentBassFolder, 'bass');
             await loadNoteFilesForType(currentMelodyFolder, 'melody');
             await loadNoteFilesForType(currentHarmonicsFolder, 'harmonics');
+
+            loadAllSettings();   // apply saved settings after dynamic selects are populated
+            attachSaveListeners();
+            updateBackgroundColour();
+            updateIndividualSizesAndReball();
         }
         
         // per-type note file storage
