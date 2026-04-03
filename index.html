@@ -417,7 +417,6 @@
                 <span class="settings-arrow">▼</span>
             </div>
             <div id="settings-content" class="settings-content">
-                <!-- row 1 -->
                 <div class="size-group">
                     <div class="size-item">
                         <label>Balls:</label>
@@ -427,22 +426,18 @@
                             <option value="7">7</option><option value="8">8</option><option value="9">9</option>
                         </select>
                     </div>
-                    <div class="size-item">
-                        <label>Instrument:</label>
-                        <select id="folder-select"><option>Loading...</option></select>
-                    </div>
+                
                     <div class="size-item">
                         <label>Background:</label>
                         <select id="bg-select"><option value="(none)" selected>(none)</option></select>
                     </div>
                     <div class="size-item">
-                        <label>Instrument Vol</label>
+                        <label>Instruments Vol</label>
                         <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
                         <label>Background Vol</label>
 
                     </div>
                 </div>
-                <!-- row 2 -->
                 <div class="size-group">
                     <div class="size-item">
                         <label>Key:</label>
@@ -468,6 +463,20 @@
                         <label>Reverb:</label>
                         <input type="range" id="reverb-amount" min="0" max="1" step="0.01" value="0.10">
                         <span id="reverb-value">0.10</span>
+                    </div>
+                </div>
+                <div class="size-group">
+                    <div class="size-item">
+                        <label>🔵 Bass Instrument:</label>
+                        <select id="bass-instrument-select"><option>Loading...</option></select>
+                    </div>
+                    <div class="size-item">
+                        <label>🟢 Melody Instrument:</label>
+                        <select id="melody-instrument-select"><option>Loading...</option></select>
+                    </div>
+                    <div class="size-item">
+                        <label>🟣 Harmonics Instrument:</label>
+                        <select id="harmonics-instrument-select"><option>Loading...</option></select>
                     </div>
                 </div>
                 <div class="size-group">
@@ -567,7 +576,10 @@
         let dissonantChords = [];
         let bgSource = null;
         let bgStop = false;
-        let currentNoteFolder = DEFAULT_NOTE_FOLDER_NAME;
+        // per-type instrument folders: bass, melody, harmonics
+        let currentBassFolder = DEFAULT_NOTE_FOLDER_NAME;
+        let currentMelodyFolder = DEFAULT_NOTE_FOLDER_NAME;
+        let currentHarmonicsFolder = DEFAULT_NOTE_FOLDER_NAME;
         let reverbWetGain = null;
         let reverbDryGain = null;  
         let reverbWetNode;
@@ -665,7 +677,9 @@
         const keySelect = document.getElementById('key-select');
         const scaleSelect = document.getElementById('scale-select');
         const ballsSelect = document.getElementById('balls-select');
-        const folderSelect = document.getElementById('folder-select');
+        const bassInstrumentSelect = document.getElementById('bass-instrument-select');
+        const melodyInstrumentSelect = document.getElementById('melody-instrument-select');
+        const harmonicsInstrumentSelect = document.getElementById('harmonics-instrument-select');
         const bgSelect = document.getElementById('bg-select');
         const bassSizeSlider = document.getElementById('bass-size-slider');
         const melodySizeSlider = document.getElementById('melody-size-slider');
@@ -750,7 +764,7 @@
                                 const name = scaleNotes[degrees[i]];
                                 const octv = String(octave+offsets[i]); 
                                 chordHighestNoteOctave = octave+offsets[i];
-                                chosen.push(findNoteFile(name + octv));
+                                chosen.push(findNoteFile(name + octv, harmonic));
                                 this.prevNote = name;
                             }
                         } 
@@ -758,7 +772,7 @@
                             const scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
                             const name = scaleHarmonics[Math.floor(Math.random() * scaleHarmonics.length)];
                             const octv = String(octave);
-                            chosen.push(findNoteFile(name + octv));
+                            chosen.push(findNoteFile(name + octv, harmonic));
                         }
                     }
                 } 
@@ -772,7 +786,7 @@
                             const nextIndex = (currentIndex+upordown) % scaleNotes.length;
                             const name = scaleNotes[nextIndex];
                             const octv = String(this.prevOctave);
-                            chosen.push(findNoteFile(name + octv));
+                            chosen.push(findNoteFile(name + octv, harmonic));
                         }
                         else {
                             const probabil = Math.random();
@@ -798,7 +812,7 @@
                                 octv = String(octave);
                                 bassnote = name;
                             }
-                            chosen.push(findNoteFile(name + octv));
+                            chosen.push(findNoteFile(name + octv, harmonic));
                             this.prevNote = name;
                             this.prevOctave = octave;
                         } 
@@ -807,7 +821,7 @@
                         const scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
                         const name = scaleHarmonics[Math.floor(Math.random() * scaleHarmonics.length)];
                         const octv = String(octave);
-                        chosen.push(findNoteFile(name + octv));
+                        chosen.push(findNoteFile(name + octv, harmonic));
                     }
                 }
                 this.prevCollisionTime = now;
@@ -912,27 +926,29 @@
                 
                 noteFolders = data.note_folders;
             
-                folderSelect.innerHTML = '';
-                if (noteFolders.length === 0) {
-                    folderSelect.innerHTML = '<option value="piano">piano</option>';
-                    noteFolders = ['piano'];
-                } else {
-                    for (let folder of noteFolders) {
-                        const option = document.createElement('option');
-                        option.value = folder;
-                        option.textContent = folder;
-                        if (folder === DEFAULT_NOTE_FOLDER_NAME) {
-                            option.selected = true;
+                const populateSelect = (selectEl, defaultValue) => {
+                    selectEl.innerHTML = '';
+                    if (noteFolders.length === 0) {
+                        selectEl.innerHTML = '<option value="piano">piano</option>';
+                    } else {
+                        for (let folder of noteFolders) {
+                            const option = document.createElement('option');
+                            option.value = folder;
+                            option.textContent = folder;
+                            if (folder === defaultValue) option.selected = true;
+                            selectEl.appendChild(option);
                         }
-                        folderSelect.appendChild(option);
                     }
-                }
+                };
+                populateSelect(bassInstrumentSelect, DEFAULT_NOTE_FOLDER_NAME);
+                populateSelect(melodyInstrumentSelect, DEFAULT_NOTE_FOLDER_NAME);
+                populateSelect(harmonicsInstrumentSelect, DEFAULT_NOTE_FOLDER_NAME);
                 
                 if (data.background_files && data.background_files.length > 0) {
                     for (let bgFile of data.background_files) {
                         const option = document.createElement('option');
                         option.value = bgFile;
-                        option.textContent = bgFile;
+                        option.textContent = bgFile.replace('.wav', '');
                         bgSelect.appendChild(option);
                     }
                 }
@@ -967,47 +983,51 @@
             } catch (error) {
                 console.error('Error loading directory:', error);
                 statusEl.textContent = 'Could not load sounds directory';
-                folderSelect.innerHTML = '<option value="piano">piano</option>';
+                [bassInstrumentSelect, melodyInstrumentSelect, harmonicsInstrumentSelect].forEach(sel => sel.innerHTML = '<option value="piano">piano</option>');
             }
             
-            await loadNoteFiles(currentNoteFolder);
+            await loadNoteFilesForType(currentBassFolder, 'bass');
+            await loadNoteFilesForType(currentMelodyFolder, 'melody');
+            await loadNoteFilesForType(currentHarmonicsFolder, 'harmonics');
         }
-
-        async function loadNoteFiles(folder) {
-
-            statusEl.textContent = `Loading notes from ${folder}...`;
-            
+        
+        // per-type note file storage
+        let activeNoteFiles = { bass: {}, melody: {}, harmonics: {} };
+        
+        async function loadNoteFilesForType(folder, typeKey) {
             if (noteFiles[folder] && Object.keys(noteFiles[folder]).length > 0) {
-                window.noteFiles = noteFiles[folder];
-                statusEl.textContent = `sounds loaded.`;
+                activeNoteFiles[typeKey] = noteFiles[folder];
                 return;
             }
-            
-            window.noteFiles = {};
-            
+            const temp = {};
             for (let note of CHROMATIC) {
                 for (let octave of [2,3,4,5,6,7,8]) {
                     const noteName = `${note}${octave}`;
-                    const possiblePaths = [
-                        `${SOUNDS_DIR}/${folder}/${noteName}.wav`,
-                    ];
-                    
-                    for (let path of possiblePaths) {
-                        try {
-                            const response = await fetch(path, { method: 'HEAD' });
-                            if (response.ok) {
-                                window.noteFiles[noteName] = path;
-                                break;
-                            }
-                        } catch (e) {}
-                    }
+                    const path = `${SOUNDS_DIR}/${folder}/${noteName}.wav`;
+                    try {
+                        const response = await fetch(path, { method: 'HEAD' });
+                        if (response.ok) temp[noteName] = path;
+                    } catch (e) {}
                 }
             }
-            
-            statusEl.textContent = `Loaded ${Object.keys(window.noteFiles).length} notes`;
+            activeNoteFiles[typeKey] = temp;
         }
 
-        async function playWavAsync(path, noteOctave, applyReverb = true,) {
+        function findNoteFile(noteName, harmonicFlag) {
+            let folderKey = 'melody';
+            if (!harmonicFlag && noteName.endsWith(BASS_OCTAVE.toString())) folderKey = 'bass';
+            else if (harmonicFlag) folderKey = 'harmonics';
+            const filesMap = activeNoteFiles[folderKey];
+            if (filesMap && filesMap[noteName]) return filesMap[noteName];
+            for (let oct of ['2','3','4','5','6']) {
+                const baseNote = noteName.replace(/[0-9]/g, '');
+                const candidate = baseNote + oct;
+                if (filesMap && filesMap[candidate]) return filesMap[candidate];
+            }
+            return null;
+        }
+
+        async function playWavAsync(path, noteOctave, applyReverb = true) {
             if (!path) return;
             
             try {
@@ -1112,21 +1132,6 @@
             }
         }
 
-        function findNoteFile(noteName) {
-            if (window.noteFiles && window.noteFiles[noteName]) {
-                return window.noteFiles[noteName];
-            }
-            
-            for (let oct of ['2','3','4','5','6']) {
-                const baseNote = noteName.replace(/[0-9]/g, '');
-                const candidate = baseNote + oct;
-                if (window.noteFiles && window.noteFiles[candidate]) {
-                    return window.noteFiles[candidate];
-                }
-            }
-            return null;
-        }
-
         function buildScale(root, scaleName) {
             if (!CHROMATIC.includes(root)) return [];
             const intervals = SCALES[scaleName] || SCALES['Major'];
@@ -1196,11 +1201,9 @@
             }
         }
 
-        folderSelect.addEventListener('change', async function() {
-            currentNoteFolder = this.value;
-            await loadNoteFiles(currentNoteFolder);
-        });
-
+        bassInstrumentSelect.addEventListener('change', async function() { currentBassFolder = this.value; await loadNoteFilesForType(currentBassFolder, 'bass'); });
+        melodyInstrumentSelect.addEventListener('change', async function() { currentMelodyFolder = this.value; await loadNoteFilesForType(currentMelodyFolder, 'melody'); });
+        harmonicsInstrumentSelect.addEventListener('change', async function() { currentHarmonicsFolder = this.value; await loadNoteFilesForType(currentHarmonicsFolder, 'harmonics'); });
 
         function processAudio() {
             if (!running) return;
@@ -1423,7 +1426,6 @@
             if (running && balls.length) {
                 for (let ball of balls) {
                     const newRadius = getRadiusForBall(ball.octave, ball.harmonic);
-                    // adjust position to stay inside canvas if needed
                     ball.radius = newRadius;
                     ball.x = Math.max(ball.radius, Math.min(WIDTH - ball.radius, ball.x));
                     ball.y = Math.max(ball.radius, Math.min(HEIGHT - ball.radius, ball.y));
