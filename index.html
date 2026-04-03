@@ -648,6 +648,7 @@
                         }
                     }
                 }
+                window._savedPresetValue = settings['preset-select'];
                 if (settings['settings-collapsed'] === 'true') {
                     const content = document.getElementById('settings-content');
                     const arrow = document.querySelector('.settings-arrow');
@@ -718,7 +719,7 @@
                 presetSelect.appendChild(option);
             }
 
-            presetSelect.value = "None";
+            presetSelect.value = window._savedPresetValue || "None";            
             
             presetSelect.addEventListener('change', (e) => {
                 const preset = data.presets[e.target.value];
