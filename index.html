@@ -246,7 +246,7 @@
         .size-item select, .size-item input[type="range"] {
             background: #0a0f16;
             border: 1px solid #2d3a48;
-            padding: 0.25rem 0.6rem;
+            padding: 0.25rem 0rem;
             font-size: 0.75rem;
         }
 
@@ -919,7 +919,8 @@
                         } 
                     }
                     else {
-                        const scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
+                        //const scaleHarmonics = [scaleNotes[0],scaleNotes[2],scaleNotes[4]];
+                        const scaleHarmonics = scaleNotes;
                         const name = scaleHarmonics[Math.floor(Math.random() * scaleHarmonics.length)];
                         const octv = String(octave);
                         chosen.push(findNoteFile(name + octv, harmonic));
