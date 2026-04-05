@@ -131,10 +131,10 @@
       "timer-minutes": "30"
     },
     "Nocturnal": {
-      "balls-select": "4",
-      "bg-select": "night.wav",
-      "volume": "0.35",
-      "key-select": "C",
+      "balls-select": "6",
+      "bg-select": "bar.wav",
+      "volume": "0.2",
+      "key-select": "F",
       "scale-select": "Dorian",
       "bass-instrument-select": "piano",
       "melody-instrument-select": "piano",
@@ -149,6 +149,27 @@
       "melody-speed": "70",
       "harmonics-speed": "25",
       "reverb-amount": "0.5",
+      "timer-minutes": "30"
+    },
+    "Social": {
+      "balls-select": "4",
+      "bg-select": "whales.wav",
+      "volume": "0.5",
+      "key-select": "F",
+      "scale-select": "Blues",
+      "bass-instrument-select": "pad",
+      "melody-instrument-select": "piano",
+      "harmonics-instrument-select": "piano",
+      "bass-volume": "1",
+      "melody-volume": "1",
+      "harmonics-volume": "1",
+      "bass-size-slider": "1",
+      "melody-size-slider": "1",
+      "harmonics-size-slider": "1",
+      "bass-speed": "30",
+      "melody-speed": "25",
+      "harmonics-speed": "7",
+      "reverb-amount": "0.6",
       "timer-minutes": "30"
     },
     "Subnautica": {
