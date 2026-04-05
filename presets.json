@@ -131,10 +131,10 @@
       "timer-minutes": "30"
     },
     "Nocturnal": {
-      "balls-select": "6",
-      "bg-select": "bar.wav",
+      "balls-select": "4",
+      "bg-select": "night.wav",
       "volume": "0.2",
-      "key-select": "F",
+      "key-select": "G",
       "scale-select": "Dorian",
       "bass-instrument-select": "piano",
       "melody-instrument-select": "piano",
@@ -152,7 +152,7 @@
       "timer-minutes": "30"
     },
     "Social": {
-      "balls-select": "4",
+      "balls-select": "6",
       "bg-select": "bar.wav",
       "volume": "0.2",
       "key-select": "F",
