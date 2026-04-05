@@ -153,8 +153,8 @@
     },
     "Social": {
       "balls-select": "4",
-      "bg-select": "whales.wav",
-      "volume": "0.5",
+      "bg-select": "bar.wav",
+      "volume": "0.2",
       "key-select": "F",
       "scale-select": "Blues",
       "bass-instrument-select": "pad",
