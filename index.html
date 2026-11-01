@@ -717,7 +717,7 @@
                 presetSelect.appendChild(option);
             }
 
-            presetSelect.value = window._savedPresetValue || "None";            
+            presetSelect.value = window._savedPresetValue || "Default";            
             
             presetSelect.addEventListener('change', (e) => {
                 const preset = data.presets[e.target.value];
