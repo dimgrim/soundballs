@@ -4,26 +4,26 @@
     "controls": ["balls-select", "bg-select", "volume", "key-select", "scale-select", "bass-instrument-select","melody-instrument-select","harmonics-instrument-select", "bass-volume", "melody-volume", "harmonics-volume", "bass-size-slider", "melody-size-slider", "harmonics-size-slider", "bass-speed", "melody-speed", "harmonics-speed", "reverb-amount", "timer-hours", "timer-minutes"]
   },
   "presets": {
-    "None": {
-      "balls-select": "3",
-      "bg-select": "none",
-      "volume": "0.5",
-      "key-select": "C",
-      "scale-select": "Major",
+    "Default": {
+      "balls-select": "4",
+      "bg-select": "rain",
+      "volume": "0.1",
+      "key-select": "E",
+      "scale-select": "Basic",
       "bass-instrument-select": "piano",
-      "melody-instrument-select": "piano",
-      "harmonics-instrument-select": "piano",
+      "melody-instrument-select": "pad 2",
+      "harmonics-instrument-select": "rhodes",
       "bass-volume": "1",
-      "melody-volume": "1",
-      "harmonics-volume": "1",
-      "bass-size-slider": "1",
+      "melody-volume": "0.65",
+      "harmonics-volume": "0.5",
+      "bass-size-slider": "2",
       "melody-size-slider": "1",
-      "harmonics-size-slider": "1",
-      "bass-speed": "15",
-      "melody-speed": "30",
-      "harmonics-speed": "10",
+      "harmonics-size-slider": "0.5",
+      "bass-speed": "10",
+      "melody-speed": "15",
+      "harmonics-speed": "18",
       "reverb-amount": "0.15",
-      "timer-minutes": "30"
+      "timer-minutes": "10"
     },
     "Apollonean": {
       "balls-select": "6",
@@ -154,7 +154,7 @@
     "Social": {
       "balls-select": "6",
       "bg-select": "bar.wav",
-      "volume": "0.2",
+      "volume": "0.35",
       "key-select": "F",
       "scale-select": "Blues",
       "bass-instrument-select": "pad",
