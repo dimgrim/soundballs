@@ -114,7 +114,7 @@
       "bg-select": "rain.wav",
       "volume": "0.1",
       "key-select": "E",
-      "scale-select": "Blues",
+      "scale-select": "Pentatonic",
       "bass-instrument-select": "piano",
       "melody-instrument-select": "pad 2",
       "harmonics-instrument-select": "rhodes",
